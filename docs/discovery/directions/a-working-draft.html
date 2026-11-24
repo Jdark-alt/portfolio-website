@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction A · Working Draft</title>
+<style>
+@font-face{font-family:"Archivo";src:url(fonts/archivo-latin-standard-normal.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Martian Mono";src:url(fonts/martian-mono-latin-standard-normal.woff2) format("woff2");font-weight:100 800;font-stretch:75% 112.5%;font-display:swap}
+:root{
+  --paper:#F2F0E9; --paper-2:#E9E6DC; --ink:#111110; --graphite:#5C5A53; --mute:#8C897F;
+  --rule:#D3CFC3; --accent:#FF4F00; --accent-ink:#B23A00;
+  --sans:"Archivo",system-ui,sans-serif; --mono:"Martian Mono",ui-monospace,monospace;
+  --gutter:40px; --max:1440px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--paper)}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;font-stretch:100%}
+.mono{font-family:var(--mono);font-stretch:87.5%;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter);position:relative}
+/* visible column grid */
+.grid-lines{position:absolute;top:0;height:560px;left:var(--gutter);right:var(--gutter);-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent);display:grid;grid-template-columns:repeat(12,1fr);gap:24px;pointer-events:none}
+.grid-lines span{border-left:1px solid rgba(17,17,16,.055);border-right:1px solid rgba(17,17,16,.055)}
+/* meta bar */
+.meta{border-bottom:1px solid var(--rule)}
+.meta .wrap{display:flex;justify-content:space-between;height:30px;align-items:center;color:var(--graphite)}
+.meta b{color:var(--ink);font-weight:500}
+.dot{display:inline-block;width:7px;height:7px;background:var(--accent);margin-right:8px;vertical-align:1px}
+/* header */
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:72px;border-bottom:1px solid var(--ink)}
+.brand{font-weight:650;font-size:17px;letter-spacing:-.01em;display:flex;gap:12px;align-items:center}
+.brand i{width:14px;height:14px;background:var(--ink);display:inline-block}
+nav{display:flex;gap:32px;font-size:14px;font-weight:500}
+nav a{color:var(--ink);text-decoration:none}
+nav a.cv{border-bottom:1px solid var(--ink)}
+/* hero */
+.hero{position:relative;padding:64px 0 0}
+.sec{display:flex;gap:16px;color:var(--accent-ink);margin-bottom:28px}
+.sec span:last-child{color:var(--graphite)}
+h1{font-weight:720;font-stretch:78%;font-size:clamp(52px,8.6vw,136px);line-height:.94;letter-spacing:-.025em;max-width:13ch}
+h1 .past{color:#857F72}
+h1 .now{display:block}
+h1 .now em{font-style:normal;position:relative}
+h1 .now em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.075em;background:var(--accent)}
+.hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-top:56px;padding-bottom:56px;border-bottom:1px solid var(--ink)}
+.lead{grid-column:1 / span 6}
+.stand{font-size:21px;line-height:1.45;letter-spacing:-.005em;color:#2A2926}
+.stand strong{font-weight:620;color:var(--ink)}
+.cta-row{display:flex;gap:20px;align-items:center;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:14px;background:var(--accent);color:var(--ink);font-weight:620;font-size:16px;padding:16px 22px;text-decoration:none}
+.btn svg{width:18px;height:18px}
+.lnk{font-size:15px;font-weight:520;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.docbox{grid-column:8 / span 5;border-top:1px solid var(--ink);align-self:start}
+.docbox dl{display:grid;grid-template-columns:120px 1fr}
+.docbox dt,.docbox dd{padding:11px 0;border-bottom:1px solid var(--rule)}
+.docbox dt{color:var(--graphite);font-family:var(--mono);font-stretch:87.5%;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding-top:14px}
+.docbox dd{font-size:15px;font-weight:500}
+.docbox dd .st{display:inline-flex;align-items:center;gap:8px}
+.docbox dd .st i{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(255,79,0,.15)}
+/* proof strip */
+.proof{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--rule)}
+.proof .c{padding:28px 24px 28px 0;border-right:1px solid var(--rule);background:var(--paper)}
+.proof .c + .c{padding-left:24px}
+.proof .c:last-child{border-right:0}
+.proof .n{font-weight:700;font-stretch:80%;font-size:44px;letter-spacing:-.02em;line-height:1}
+.proof .n small{font-size:.5em;font-weight:600;color:var(--graphite);letter-spacing:0}
+.proof .l{margin-top:10px;font-size:14px;line-height:1.4;color:var(--graphite)}
+.proof .src{margin-top:12px;color:var(--mute)}
+/* how i work */
+.how{padding:72px 0 96px}
+.how-head{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end;margin-bottom:40px}
+.how-head h2{grid-column:1 / span 6;font-weight:680;font-stretch:82%;font-size:48px;letter-spacing:-.02em;line-height:1}
+.how-head p{grid-column:8 / span 5;color:var(--graphite);font-size:16px;line-height:1.5}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--ink)}
+.step{padding:20px 20px 28px 0;position:relative}
+.step + .step{padding-left:20px;border-left:1px solid var(--rule)}
+.step .num{color:var(--accent-ink)}
+.step h3{font-size:26px;font-weight:660;font-stretch:85%;letter-spacing:-.01em;margin:14px 0 10px}
+.step p{font-size:14.5px;line-height:1.45;color:#3A3935}
+.step a{display:block;margin-top:16px;color:var(--ink);text-decoration:none}
+.step a span{border-bottom:1px solid var(--accent)}
+.step.on{background:linear-gradient(var(--paper-2),var(--paper-2)) padding-box}
+.step.on::before{content:"";position:absolute;left:0;right:0;top:-1px;height:3px;background:var(--accent)}
+.note{position:absolute;right:calc(var(--gutter) - 4px);top:76px;writing-mode:vertical-rl;color:var(--mute)}
+@media (max-width:760px){
+  :root{--gutter:16px}
+  .meta .wrap span:nth-child(2){display:none}
+  nav{display:none}
+  header .wrap{height:60px}
+  .menu{display:block!important}
+  .hero{padding-top:36px}
+  h1{font-size:54px;font-stretch:76%}
+  .hero-grid{display:block;margin-top:28px;padding-bottom:36px}
+  .stand{font-size:18px}
+  .docbox{margin-top:36px}
+  .docbox dl{grid-template-columns:96px 1fr}
+  .proof{grid-template-columns:1fr 1fr}
+  .proof .c{padding:22px 12px 22px 0}
+  .proof .c:nth-child(2n){padding-left:14px;border-right:0}
+  .proof .c:nth-child(3){padding-left:0;border-top:1px solid var(--rule)}
+  .proof .c:nth-child(4){border-top:1px solid var(--rule)}
+  .meta .wrap > span:first-child b ~ *{display:none}
+  .grid-lines{height:380px}
+  .proof .n{font-size:34px}
+  .how{padding:48px 0 64px}
+  .how-head{display:block}
+  .how-head h2{font-size:36px;margin-bottom:12px}
+  .steps{grid-template-columns:1fr}
+  .step,.step + .step{padding:18px 0 22px;border-left:0;border-bottom:1px solid var(--rule)}
+  .step h3{font-size:24px;margin:8px 0 6px}
+  .grid-lines{grid-template-columns:repeat(4,1fr);gap:16px}
+  .grid-lines span:nth-child(n+5){display:none}
+  .note{display:none}
+}
+.meta .wrap > span:last-child{white-space:nowrap}
+@media (max-width:760px){.hide-sm{display:none}}
+.menu{display:none;font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="meta"><div class="wrap mono"><span><span class="dot"></span><b>JF-001</b> <span class="hide-sm">Portfolio · Rev. 24 Nov 2026</span></span><span>Product manager · B2B SaaS · AI</span><span>Status: <b>open to PM roles</b></span></div></div>
+<header><div class="wrap"><div class="brand"><i></i>Jerry Fernandes</div><nav><a href="#">Mindkraft</a><a href="#">TPTD</a><a href="#">Case studies</a><a href="#">Experience</a><a href="#">About</a><a class="cv" href="#">Résumé ↓</a></nav><span class="menu">Menu</span></div></header>
+<main>
+<section class="hero"><div class="grid-lines"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="wrap">
+  <div class="sec mono"><span>§0</span><span>Thesis</span></div>
+  <h1><span class="past">Six years explaining B2B software.</span> <span class="now">Now I <em>build</em> it.</span></h1>
+  <div class="hero-grid">
+    <div class="lead">
+      <p class="stand">I own two products end to end. <strong>Mindkraft</strong> is a live habit-gamification app with two shipped Claude Haiku features. <strong>TPTD</strong> is a two-player strategy game that went through 25 builds in 5 weeks. I frame the problem, make the calls and write the specs. AI coding agents write the code.</p>
+      <div class="cta-row"><a class="btn" href="#">See how I build products <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h12M10 4l5 5-5 5"/></svg></a><a class="lnk" href="#">Read the résumé</a></div>
+    </div>
+    <div class="docbox"><dl>
+      <dt>Author</dt><dd>Jerry Fernandes</dd>
+      <dt>Role</dt><dd>Product manager, moving from B2B content</dd>
+      <dt>Based</dt><dd>Ahmedabad, India</dd>
+      <dt>Shipping</dt><dd>Mindkraft · TPTD</dd>
+      <dt>Status</dt><dd><span class="st"><i></i>Open to PM roles</span></dd>
+    </dl></div>
+  </div>
+  <div class="proof">
+    <div class="c"><div class="n">2</div><div class="l">LLM features in production, about ₹2 a query</div><div class="src mono">Mindkraft · §5</div></div>
+    <div class="c"><div class="n">50<small> / 26</small></div><div class="l">sign-ups / weekly actives, no paid marketing</div><div class="src mono">Mindkraft · §8</div></div>
+    <div class="c"><div class="n">25</div><div class="l">builds in 5 weeks, each behind a test and sim gate</div><div class="src mono">TPTD · §4</div></div>
+    <div class="c"><div class="n">15+</div><div class="l">specs with non-goals, open decisions and tests</div><div class="src mono">Mindkraft · §4</div></div>
+  </div>
+</div>
+<span class="note mono">Draft copy · Jerry to rewrite</span>
+</section>
+<section class="how"><div class="wrap">
+  <div class="how-head"><h2>How I work</h2><p>Six steps I repeat on every change. Each one links to the place in a project where it actually happened, with the evidence.</p></div>
+  <div class="steps">
+    <div class="step on"><span class="num mono">01</span><h3>Frame</h3><p>Turned "nerf wall charges" into a tug-of-war where both sides reshape the map.</p><a class="mono" href="#"><span>TPTD §2</span> ↗</a></div>
+    <div class="step"><span class="num mono">02</span><h3>Decide</h3><p>Grit can be earned, never bought, and the economy has to hold.</p><a class="mono" href="#"><span>Mindkraft §3</span> ↗</a></div>
+    <div class="step"><span class="num mono">03</span><h3>Spec</h3><p>Non-goals, open decisions and acceptance tests in every handoff.</p><a class="mono" href="#"><span>Mindkraft §4</span> ↗</a></div>
+    <div class="step"><span class="num mono">04</span><h3>Ship</h3><p>Branch previews; nothing reaches live users without my sign-off.</p><a class="mono" href="#"><span>TPTD §4</span> ↗</a></div>
+    <div class="step"><span class="num mono">05</span><h3>Measure</h3><p>258 bot matches per mode before a balance change ships.</p><a class="mono" href="#"><span>TPTD §5</span> ↗</a></div>
+    <div class="step"><span class="num mono">06</span><h3>Iterate</h3><p>Sabotage rebuilt across 8 builds, each answering a finding.</p><a class="mono" href="#"><span>TPTD §7</span> ↗</a></div>
+  </div>
+</div></section>
+</main>
+</body>
+</html>

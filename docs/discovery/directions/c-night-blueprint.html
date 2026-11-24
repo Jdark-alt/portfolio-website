@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction C · Night Blueprint</title>
+<style>
+@font-face{font-family:"Instrument Sans";src:url(fonts/instrument-sans-latin-standard-normal.woff2) format("woff2");font-weight:400 700;font-stretch:75% 100%;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2");font-weight:100 800;font-display:swap}
+:root{
+  --bg:#0E0F10; --bg-2:#151618; --ink:#ECE9E1; --dim:#9A978F; --faint:#5E5C57;
+  --rule:rgba(236,233,225,.13); --accent:#FFB000;
+  --sans:"Instrument Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:40px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--gutter);position:relative}
+.sheet{background-image:radial-gradient(rgba(236,233,225,.09) 1px,transparent 1.2px);background-size:24px 24px;background-position:-1px -1px}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:68px;border-bottom:1px solid var(--rule)}
+.brand{display:flex;gap:14px;align-items:center;font-weight:600;font-size:16px}
+.brand svg{width:18px;height:18px}
+nav{display:flex;gap:28px;font-size:14px;color:var(--dim)}
+nav a{color:inherit;text-decoration:none} nav a:first-child{color:var(--ink)}
+.hero{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;padding:64px 0 48px;position:relative}
+.crop{position:absolute;width:14px;height:14px;border-color:var(--faint);border-style:solid}
+.crop.tl{left:-18px;top:30px;border-width:1px 0 0 1px}.crop.tr{right:-18px;top:30px;border-width:1px 1px 0 0}
+.left{grid-column:1 / span 7}
+.tag{display:flex;gap:14px;color:var(--dim);margin-bottom:30px}
+.tag b{color:var(--accent);font-weight:500}
+h1{font-weight:600;font-stretch:76%;font-size:clamp(52px,7.8vw,124px);line-height:.92;letter-spacing:-.02em}
+h1 span{color:var(--dim)}
+.stand{margin-top:34px;font-size:20px;line-height:1.5;color:#CFCBC2;max-width:34em}
+.cta{margin-top:34px;display:flex;gap:22px;align-items:center}
+.btn{display:inline-flex;gap:12px;align-items:center;background:var(--accent);color:#141006;padding:16px 22px;font-weight:650;font-size:16px;text-decoration:none}
+.lnk{color:var(--ink);font-size:15px;text-decoration:none;border-bottom:1px dashed var(--faint);padding-bottom:3px}
+.side{grid-column:8 / span 5;display:grid;grid-template-columns:1fr 196px;gap:16px;align-items:start}
+.fig{border:1px solid var(--rule);background:rgba(14,15,16,.85);padding:18px 18px 10px;align-self:start}
+.fig .cap{display:flex;justify-content:space-between;color:var(--dim);margin-bottom:6px}
+.fig svg{width:100%;height:auto;display:block}
+.fig .foot{border-top:1px solid var(--rule);margin-top:8px;padding-top:10px;color:var(--faint);display:flex;justify-content:space-between}
+.readouts{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.readouts .c{padding:22px 20px 24px 0}
+.readouts .c + .c{padding-left:20px;border-left:1px solid var(--rule)}
+.readouts .v{font-family:var(--mono);font-size:38px;font-weight:500;letter-spacing:-.03em;color:var(--ink)}
+.readouts .v i{font-style:normal;color:var(--accent)}
+.readouts .k{margin-top:8px;font-size:14px;color:var(--dim);line-height:1.4}
+.readouts .s{margin-top:10px;color:var(--faint)}
+/* ledger HUD */
+.ledger{border:1px solid var(--rule);background:rgba(14,15,16,.92);backdrop-filter:none;padding:12px 12px 10px}
+.ledger.m{display:none}
+.ledger h4{display:flex;justify-content:space-between;color:var(--dim);margin-bottom:8px;font-weight:500}
+.ledger ul{list-style:none}
+.ledger li{display:grid;grid-template-columns:12px 1fr;gap:8px;align-items:center;font-size:12.5px;padding:5px 0;color:var(--faint);border-top:1px solid rgba(236,233,225,.06)}
+.ledger li i{width:9px;height:9px;border:1px solid var(--faint)}
+.ledger li.on{color:var(--ink)}
+.ledger li.on i{background:var(--accent);border-color:var(--accent)}
+.ledger li small{display:block;grid-column:2;font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:none;letter-spacing:0;margin-top:1px}
+.ledger .bar{margin-top:8px;height:2px;background:var(--rule)}
+.ledger .bar i{display:block;width:30%;height:100%;background:var(--accent)}
+.entr{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;padding:48px 0 80px}
+.card{border:1px solid var(--rule);background:var(--bg-2);padding:20px}
+.card .h{display:flex;justify-content:space-between;color:var(--dim);margin-bottom:14px}
+.card h3{font-size:36px;font-weight:600;font-stretch:80%;letter-spacing:-.01em}
+.card p{color:#BDB9B0;font-size:15.5px;line-height:1.5;margin:8px 0 16px}
+.card img{width:100%;display:block;border:1px solid var(--rule)}
+.card.mk{display:grid;grid-template-columns:1fr 150px;gap:18px}
+.card.mk img{border-radius:18px}
+@media (max-width:760px){
+  :root{--gutter:16px}
+  nav{display:none}
+  .hero{display:block;padding:40px 0 32px}
+  h1{font-size:52px}
+  .stand{font-size:17.5px}
+  .fig{margin-top:36px}
+  .readouts{grid-template-columns:1fr 1fr}
+  .readouts .c{padding:18px 10px 18px 0}
+  .readouts .c:nth-child(3){padding-left:0;border-left:0;border-top:1px solid var(--rule)}
+  .readouts .c:nth-child(4){border-top:1px solid var(--rule)}
+  .side{display:block}
+  .side .ledger{display:none}
+  .tag span:last-child{display:none}
+  .readouts .v{font-size:30px}
+  .ledger.m{display:block;position:fixed;left:0;right:0;bottom:0;border-width:1px 0 0;padding:10px 16px 12px}
+  .ledger ul{display:none}
+  .ledger.m{display:none}
+.ledger h4{margin:0}
+  .entr{grid-template-columns:1fr;padding-bottom:120px}
+  .card.mk{grid-template-columns:1fr 110px}
+  .crop{display:none}
+}
+</style>
+</head>
+<body class="sheet">
+<header><div class="wrap"><div class="brand"><svg viewBox="0 0 18 18" fill="none" stroke="#FFB000" stroke-width="1.4"><path d="M1 9h16M9 1v16"/><circle cx="9" cy="9" r="5"/></svg>Jerry Fernandes</div><nav><a href="#">Work</a><a href="#">Case studies</a><a href="#">Experience</a><a href="#">About</a><a href="#">Résumé</a></nav></div></header>
+<main class="wrap">
+  <section class="hero"><span class="crop tl"></span><span class="crop tr"></span>
+    <div class="left">
+      <div class="tag mono"><b>● Live</b><span>Product manager · Ahmedabad, IN</span><span>Sheet 01 / 06</span></div>
+      <h1><span>Six years explaining B2B software.</span> Now I build it.</h1>
+      <p class="stand">I own two products end to end: Mindkraft, a live habit app with two shipped Claude Haiku features, and TPTD, a two-player strategy game shipped across 25 builds in 5 weeks. I frame, decide and spec. AI coding agents write the code.</p>
+      <div class="cta"><a class="btn" href="#">See how I build products →</a><a class="lnk" href="#">Résumé (PDF)</a></div>
+    </div>
+    <div class="side"><figure class="fig"><div class="cap mono"><span>Fig. 1: How I work</span><span>Loop</span></div>
+      <svg viewBox="0 0 400 300" fill="none" font-family="JetBrains Mono, monospace" font-size="10">
+        <rect x="40" y="50" width="320" height="190" rx="95" stroke="rgba(236,233,225,.35)" stroke-dasharray="3 4"/>
+        <path d="M40 145 A95 95 0 0 1 135 50 H170" stroke="#FFB000" stroke-width="2"/>
+        <g stroke="rgba(236,233,225,.25)"><path d="M40 270 H360"/><path d="M40 264 V276 M360 264 V276"/></g>
+        <text x="200" y="290" fill="#5E5C57" text-anchor="middle" letter-spacing=".05em">ONE CHANGE, END TO END</text>
+        <g fill="#0E0F10" stroke-width="1.5">
+          <circle cx="58" cy="105" r="7" stroke="#FFB000" fill="#FFB000"/>
+          <circle cx="170" cy="50" r="7" stroke="#FFB000"/>
+          <circle cx="300" cy="62" r="7" stroke="rgba(236,233,225,.6)"/>
+          <circle cx="352" cy="170" r="7" stroke="rgba(236,233,225,.6)"/>
+          <circle cx="230" cy="240" r="7" stroke="rgba(236,233,225,.6)"/>
+          <circle cx="92" cy="222" r="7" stroke="rgba(236,233,225,.6)"/>
+        </g>
+        <g fill="#ECE9E1" font-size="11">
+          <text x="74" y="101">01 FRAME</text><text x="150" y="34">02 DECIDE</text><text x="276" y="44">03 SPEC</text>
+          <text x="290" y="200">04 SHIP</text><text x="200" y="226">05 MEASURE</text><text x="22" y="252" >06 ITERATE</text>
+        </g>
+        <g fill="#9A978F" font-size="9"><text x="74" y="115">TPTD §2 → tug-of-war</text><text x="150" y="70" >Mindkraft §3</text></g>
+      </svg>
+      <div class="foot mono"><span>Scroll to trace the loop</span><span>2 / 6 lit</span></div>
+    </figure>
+<aside class="ledger"><h4 class="mono"><span>PM skill ledger</span><span>3/10</span></h4>
+  <ul>
+    <li class="on"><i></i>Discovery<small>playtest → dominant strategy</small></li>
+    <li class="on"><i></i>Problem framing<small>"tug-of-war", not "nerf"</small></li>
+    <li><i></i>Requirements</li>
+    <li class="on"><i></i>Prioritisation<small>said no to 3D</small></li>
+    <li><i></i>Roadmapping</li><li><i></i>Metrics</li><li><i></i>AI product judgement</li><li><i></i>UX</li><li><i></i>Execution</li><li><i></i>Go-to-market</li>
+  </ul><div class="bar"><i></i></div></aside></div>
+  </section>
+  <section class="readouts">
+    <div class="c"><div class="v">≈₹2</div><div class="k">per AI query, two Haiku features live</div><div class="s mono">Mindkraft · AI</div></div>
+    <div class="c"><div class="v">50<i>/</i>26</div><div class="k">sign-ups / weekly actives, no paid marketing</div><div class="s mono">Mindkraft · Metrics</div></div>
+    <div class="c"><div class="v">25</div><div class="k">builds in 5 weeks</div><div class="s mono">TPTD · Execution</div></div>
+    <div class="c"><div class="v">258</div><div class="k">bot matches per mode, v33 gate</div><div class="s mono">TPTD · Metrics</div></div>
+  </section>
+  <section class="entr">
+    <div class="card"><div class="h mono"><span>Project 02 · TPTD</span><span>v9 → v34</span></div><h3>Two players. One maze. Every number simulated first.</h3><p>Strategy game; 1v1, simultaneous hidden planning, online play.</p><img src="img/tptd-wave.webp" alt="TPTD wave planning screen"></div>
+    <div class="card mk"><div><div class="h mono"><span>Project 01 · Mindkraft</span></div><h3>AI that plans from your own habits.</h3><p>Two Claude Haiku features, repair-not-reject validation, nothing saved without a yes.</p></div><img src="img/mk-composer.webp" alt="Mindkraft Quest Composer draft"></div>
+  </section>
+</main>
+<aside class="ledger m"><h4 class="mono"><span>PM skill ledger · tap to open</span><span>3/10</span></h4><div class="bar"><i></i></div></aside>
+
+</body>
+</html>

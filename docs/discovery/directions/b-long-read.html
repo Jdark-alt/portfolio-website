@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction B · Long Read</title>
+<style>
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader-latin-standard-normal.woff2) format("woff2");font-weight:200 800;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader-latin-standard-italic.woff2) format("woff2");font-weight:200 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Schibsted Grotesk";src:url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2");font-weight:400 900;font-display:swap}
+:root{
+  --paper:#F5F1E8; --ink:#1A1814; --graphite:#5F594E; --mute:#8E877A; --rule:#DCD4C4;
+  --accent:#1F3BD1;
+  --serif:"Newsreader",Georgia,serif; --sans:"Schibsted Grotesk",system-ui,sans-serif;
+  --gutter:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--gutter)}
+.lbl{font-family:var(--sans);font-size:12px;font-weight:560;letter-spacing:.09em;text-transform:uppercase}
+header .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px;border-bottom:1px solid var(--ink)}
+.mast{font-family:var(--serif);font-size:22px;font-variation-settings:"opsz" 36;font-weight:500;letter-spacing:-.01em;text-align:center}
+.mast i{color:var(--accent)}
+nav{display:flex;gap:26px;font-family:var(--sans);font-size:14px;font-weight:500}
+nav.r{justify-content:flex-end}
+nav a{color:var(--ink);text-decoration:none}
+.dateline{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--rule);color:var(--graphite)}
+.hero{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;padding:72px 0 64px;border-bottom:1px solid var(--ink)}
+.kick{grid-column:1 / span 8;color:var(--accent);margin-bottom:26px}
+h1{grid-column:1 / span 9;font-weight:380;font-variation-settings:"opsz" 72;font-size:clamp(50px,8.2vw,132px);line-height:.94;letter-spacing:-.028em}
+h1 em{font-style:italic;font-weight:360;color:var(--accent)}
+.stand{grid-column:1 / span 6;margin-top:40px;font-size:23px;line-height:1.42;font-variation-settings:"opsz" 18;color:#2B2822}
+.byline{grid-column:1 / span 6;margin-top:30px;display:flex;gap:18px;align-items:center;font-family:var(--sans);font-size:14px;color:var(--graphite)}
+.byline b{color:var(--ink);font-weight:600}
+.cta{margin-top:34px;grid-column:1 / span 6;display:flex;gap:26px;align-items:center}
+.btn{font-family:var(--sans);font-weight:600;font-size:16px;color:var(--paper);background:var(--ink);padding:17px 24px;text-decoration:none;display:inline-flex;gap:14px;align-items:center}
+.btn span{color:#9DAAF5}
+.ul{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
+.toc{display:block;grid-column:9 / span 4;grid-row:3 / span 4;align-self:end;border-top:1px solid var(--ink);font-family:var(--serif);font-size:inherit;font-weight:inherit}
+.toc h2{padding:12px 0 14px;color:var(--graphite)}
+.toc a{display:grid;grid-template-columns:36px 1fr auto;gap:8px;padding:14px 0;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink);align-items:baseline}
+.toc .r{font-style:italic;color:var(--accent);font-size:18px}
+.toc .t{font-size:19px;line-height:1.25;font-variation-settings:"opsz" 24}
+.toc .t small{display:block;font-family:var(--sans);font-size:13px;color:var(--graphite);margin-top:4px;line-height:1.35}
+.toc .pg{font-family:var(--sans);font-size:12px;color:var(--mute)}
+/* features */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--rule)}
+.feat{padding:48px 40px 56px 0;display:grid;grid-template-columns:1fr 210px;gap:32px;align-items:start}
+.feat + .feat{padding-left:40px;padding-right:0;border-left:1px solid var(--rule)}
+.feat.wide{grid-template-columns:1fr}
+.feat .no{color:var(--accent);font-style:italic;font-size:20px}
+.feat h3{font-weight:420;font-variation-settings:"opsz" 60;font-size:46px;line-height:1;letter-spacing:-.02em;margin:10px 0 16px}
+.feat p{font-size:18px;line-height:1.45;color:#3A362F}
+.feat sup{font-family:var(--sans);font-size:11px;color:var(--accent);font-weight:600}
+.facts{margin-top:22px;display:flex;gap:28px;font-family:var(--sans)}
+.facts b{display:block;font-family:var(--serif);font-weight:420;font-size:36px;letter-spacing:-.01em;font-variation-settings:"opsz" 48}
+.facts span{font-size:12.5px;color:var(--graphite);line-height:1.35;display:block;max-width:15ch}
+.phone{border-radius:28px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.08),0 24px 48px -24px rgba(26,24,20,.45);border:6px solid #1A1814}
+.phone img,.shot img{display:block;width:100%;height:auto}
+.shot{margin-top:24px;box-shadow:0 24px 48px -28px rgba(26,24,20,.5)}
+.fn{padding:18px 0 56px;display:flex;gap:10px;font-family:var(--sans);font-size:13px;color:var(--graphite)}
+.fn sup{color:var(--accent);font-weight:600}
+@media (max-width:760px){
+  :root{--gutter:16px}
+  header .wrap{grid-template-columns:1fr auto;height:60px}
+  nav.l{display:none} nav.r a:not(:last-child){display:none}
+  .mast{text-align:left;font-size:19px}
+  .dateline span:last-child{display:none}
+  .hero{display:block;padding:40px 0 44px}
+  h1{font-size:52px}
+  .stand{font-size:19px;margin-top:26px}
+  .byline{flex-wrap:wrap;gap:6px 14px}
+  .cta{flex-wrap:wrap}
+  .toc{margin-top:44px}
+  .features{grid-template-columns:1fr}
+  .feat,.feat + .feat{padding:36px 0 40px;border-left:0;grid-template-columns:1fr 120px;gap:18px}
+  .feat + .feat{border-top:1px solid var(--rule)}
+  .feat.wide{grid-template-columns:1fr}
+  .feat h3{font-size:34px}
+  .feat p{font-size:16.5px}
+  .facts{gap:18px}
+  .facts b{font-size:28px}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap"><nav class="l"><a href="#">Work</a><a href="#">Case studies</a><a href="#">Experience</a></nav><div class="mast">Jerry Fernandes<i>.</i></div><nav class="r"><a href="#">About</a><a href="#">Résumé</a><a href="#">Contact</a></nav></div></header>
+<main class="wrap">
+  <div class="dateline lbl"><span>Product management portfolio</span><span>Ahmedabad, India · November 2026</span></div>
+  <section class="hero">
+    <div class="kick lbl">A product manager’s notebook</div>
+    <h1>Six years explaining B2B software. <em>Now I build it.</em></h1>
+    <p class="stand">I own two products end to end: a live habit app with two shipped AI features, and a two-player strategy game that went through 25 builds in five weeks. These are the notes on how they were framed, decided, specced, shipped and measured, including what broke.</p>
+    <div class="byline"><b>By Jerry Fernandes</b><span>Product manager in transition</span><span>Previously B2B SaaS content at Odoo India and OpenXcell</span></div>
+    <div class="cta"><a class="btn" href="#">See how I build products <span>→</span></a><a class="ul" href="#">Download the résumé</a></div>
+    <nav class="toc"><h2 class="lbl">In this portfolio</h2>
+      <a href="#"><span class="r">I.</span><span class="t">Mindkraft<small>Shipping two LLM features into a habit app</small></span><span class="pg">10 ch.</span></a>
+      <a href="#"><span class="r">II.</span><span class="t">TPTD<small>25 builds in 5 weeks, each one gated by data</small></span><span class="pg">10 ch.</span></a>
+      <a href="#"><span class="r">III.</span><span class="t">Case studies<small>PRD, UX reviews, research, growth, B2B AI</small></span><span class="pg">6</span></a>
+      <a href="#"><span class="r">IV.</span><span class="t">Before product<small>Six years translating ERP for buyers</small></span><span class="pg">→</span></a>
+    </nav>
+  </section>
+  <section class="features">
+    <article class="feat"><div><span class="no">I.</span><h3>Mindkraft</h3><p>A life-gamification app where an AI weaves your goals into a map built from habits you already keep, and nothing is added without your yes.<sup>1</sup></p>
+      <div class="facts"><div><b>≈₹2</b><span>per AI query on Claude Haiku</span></div><div><b>26</b><span>weekly actives from 50 sign-ups</span></div></div></div>
+      <div class="phone"><img src="img/mk-map.webp" alt="Mindkraft Map screen showing goal threads woven from existing habits"></div></article>
+    <article class="feat wide"><div><span class="no">II.</span><h3>TPTD</h3><p>A two-player tower defence game. One side times an army, the other builds a maze, both plan at once. Every balance change waited on bot simulations.</p>
+      <div class="facts"><div><b>25</b><span>builds in five weeks</span></div><div><b>258</b><span>bot matches per mode before v33 shipped</span></div></div>
+      <div class="shot"><img src="img/tptd-wave.webp" alt="TPTD attacker wave planning screen"></div></div></article>
+  </section>
+  <p class="fn"><sup>1</sup> Built with Claude Code. I own the problem, the decisions, the specs and the quality bar; I don’t write the code.</p>
+</main>
+</body>
+</html>
