@@ -52,7 +52,7 @@ const isCurrent = (href: string) => here === url(href) || (href !== '/' && here.
 <style>
   .site-header {
     position: sticky;
-    top: 0;
+    top: env(safe-area-inset-top, 0px);
     z-index: 40;
     background: var(--bg);
     transition: transform 520ms var(--ease-out), background-color var(--dur-2);

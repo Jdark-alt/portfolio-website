@@ -52,6 +52,10 @@ const standfirsts = home.hero.standfirsts.map((s) => ({ id: s.id, label: clip(s.
   };
   const root = document.documentElement;
   const box = document.querySelector<HTMLElement>('[data-preview]');
+  // Some hosts (e.g. an embedded preview) drop query strings; there we keep the choice
+  // in localStorage and reload instead.
+  const noQuery = (window as unknown as { __jfNoQuery?: boolean }).__jfNoQuery === true;
+  const go = (params: URLSearchParams) => (noQuery ? location.reload() : (location.search = params.toString()));
   if (box) {
     const params = new URLSearchParams(location.search);
     const current = {
@@ -67,7 +71,7 @@ const standfirsts = home.hero.standfirsts.map((s) => ({ id: s.id, label: clip(s.
       btn.addEventListener('click', () => {
         store.set(KEY.d, btn.dataset.pvDir!);
         params.set('d', btn.dataset.pvDir!);
-        location.search = params.toString();
+        go(params);
       });
     });
     box.querySelectorAll<HTMLSelectElement>('[data-pv-select]').forEach((sel) => {
@@ -76,13 +80,14 @@ const standfirsts = home.hero.standfirsts.map((s) => ({ id: s.id, label: clip(s.
       sel.addEventListener('change', () => {
         store.set(KEY[k], sel.value);
         params.set(k, sel.value);
-        location.search = params.toString();
+        go(params);
       });
     });
     const label = box.querySelector('[data-pv-current]');
     if (label) label.textContent = `${current.d.toUpperCase()}${isHome && current.h ? ` · ${current.h.toUpperCase()}` : ''}`;
 
     const copy = box.querySelector<HTMLButtonElement>('[data-pv-copy]');
+    if (copy && noQuery) copy.hidden = true;
     copy?.addEventListener('click', async () => {
       const link = new URL(location.href);
       link.searchParams.set('d', current.d);
