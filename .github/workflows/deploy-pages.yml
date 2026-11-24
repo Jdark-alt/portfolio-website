@@ -1,5 +1,6 @@
 # Builds the site and publishes it to GitHub Pages on every push to main.
 # One-time setup: repo Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# (If Source is "Deploy from a branch", GitHub runs Jekyll on the raw repo instead and fails.)
 # The live preview is then at https://jdark-alt.github.io/portfolio-website/
 name: Deploy preview to GitHub Pages
 
@@ -21,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -32,7 +33,7 @@ jobs:
         env:
           SITE_URL: https://jdark-alt.github.io
           BASE_PATH: /portfolio-website/
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -44,4 +45,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
