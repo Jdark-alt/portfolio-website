@@ -1,0 +1,176 @@
+---
+import { getHome, getSite } from '../lib/content';
+
+const site = await getSite();
+const home = await getHome();
+const clip = (s: string, n = 46) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
+const headlines = home.hero.headlines.map((h) => ({ id: h.id, label: clip(`${h.lead} ${h.main}`.trim()) }));
+const standfirsts = home.hero.standfirsts.map((s) => ({ id: s.id, label: clip(s.text.replace(/\*\*/g, ''), 40) }));
+---
+<aside class="pv" data-preview aria-label={site.ui.previewLabel}>
+  <details class="pv-box" data-pv-details>
+    <summary class="pv-sum label">
+      <span class="pv-dot" aria-hidden="true"></span>{site.ui.previewShow}
+      <span class="pv-current" data-pv-current></span>
+    </summary>
+    <div class="pv-body">
+      <fieldset class="pv-row">
+        <legend class="label">{site.ui.previewDirection}</legend>
+        <div class="pv-seg">
+          {site.directions.map((d) => (
+            <button type="button" class="pv-dir" data-pv-dir={d.id}>
+              <b>{d.id.toUpperCase()}</b> <span>{d.name}</span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <div class="pv-row" data-pv-home>
+        <label class="label" for="pv-headline">{site.ui.previewHeadline}</label>
+        <select id="pv-headline" data-pv-select="h">
+          {headlines.map((h, i) => <option value={h.id}>{i + 1}. {h.label}</option>)}
+        </select>
+      </div>
+      <div class="pv-row" data-pv-home>
+        <label class="label" for="pv-standfirst">{site.ui.previewStandfirst}</label>
+        <select id="pv-standfirst" data-pv-select="s">
+          {standfirsts.map((s, i) => <option value={s.id}>{i + 1}. {s.label}</option>)}
+        </select>
+      </div>
+      <div class="pv-actions">
+        <button type="button" class="pv-copy label" data-pv-copy data-done={site.ui.copied}>{site.ui.previewCopyLink}</button>
+      </div>
+      <p class="pv-note">{site.ui.previewNote}</p>
+    </div>
+  </details>
+</aside>
+
+<script>
+  const KEY = { d: 'jf-direction', h: 'jf-headline', s: 'jf-standfirst' } as const;
+  const store = {
+    get(k: string) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k: string, v: string) { try { localStorage.setItem(k, v); } catch { /* storage blocked */ } },
+  };
+  const root = document.documentElement;
+  const box = document.querySelector<HTMLElement>('[data-preview]');
+  if (box) {
+    const params = new URLSearchParams(location.search);
+    const current = {
+      d: root.dataset.direction ?? 'a',
+      h: root.dataset.pvHeadline ?? '',
+      s: root.dataset.pvStandfirst ?? '',
+    };
+    const isHome = !!document.querySelector('[data-hero]');
+    box.querySelectorAll<HTMLElement>('[data-pv-home]').forEach((el) => (el.hidden = !isHome));
+
+    box.querySelectorAll<HTMLButtonElement>('[data-pv-dir]').forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.pvDir === current.d));
+      btn.addEventListener('click', () => {
+        store.set(KEY.d, btn.dataset.pvDir!);
+        params.set('d', btn.dataset.pvDir!);
+        location.search = params.toString();
+      });
+    });
+    box.querySelectorAll<HTMLSelectElement>('[data-pv-select]').forEach((sel) => {
+      const k = sel.dataset.pvSelect as 'h' | 's';
+      if (current[k]) sel.value = current[k];
+      sel.addEventListener('change', () => {
+        store.set(KEY[k], sel.value);
+        params.set(k, sel.value);
+        location.search = params.toString();
+      });
+    });
+    const label = box.querySelector('[data-pv-current]');
+    if (label) label.textContent = `${current.d.toUpperCase()}${isHome && current.h ? ` · ${current.h.toUpperCase()}` : ''}`;
+
+    const copy = box.querySelector<HTMLButtonElement>('[data-pv-copy]');
+    copy?.addEventListener('click', async () => {
+      const link = new URL(location.href);
+      link.searchParams.set('d', current.d);
+      if (isHome) { link.searchParams.set('h', current.h); link.searchParams.set('s', current.s); }
+      const original = copy.textContent;
+      try {
+        await navigator.clipboard.writeText(link.href);
+        copy.textContent = copy.dataset.done ?? 'Copied';
+      } catch {
+        window.prompt?.('Copy this link', link.href);
+      }
+      setTimeout(() => (copy.textContent = original), 1800);
+    });
+  }
+</script>
+
+<style>
+  .pv {
+    position: fixed;
+    right: calc(var(--gutter-r) - 4px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    z-index: 60;
+    max-width: min(360px, calc(100vw - 2 * var(--gutter)));
+    font-family: 'Archivo Variable', system-ui, sans-serif;
+    font-stretch: 100%;
+    color: #f4f2ec;
+  }
+  .pv-box {
+    background: rgba(20, 20, 19, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.6);
+  }
+  .pv-sum {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #f4f2ec;
+  }
+  .pv-sum::-webkit-details-marker { display: none; }
+  .pv-dot { width: 8px; height: 8px; border-radius: 50%; background: #ffe600; flex: none; }
+  .pv-current { margin-left: auto; color: #b8b5ad; }
+  .pv-body { padding: 4px 14px 14px; display: grid; gap: 14px; }
+  .pv-row { border: 0; padding: 0; display: grid; gap: 6px; min-width: 0; }
+  .pv-row .label, .pv-row legend {
+    font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+    font-size: 0.625rem; letter-spacing: 0.08em; text-transform: uppercase; color: #b8b5ad; padding: 0;
+  }
+  .pv-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .pv-dir {
+    text-align: left;
+    padding: 8px 8px 7px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: #d9d6ce;
+  }
+  .pv-dir b { display: block; font-size: 0.9375rem; color: #fff; }
+  .pv-dir[aria-pressed='true'] { background: #ffe600; color: #111; border-color: #ffe600; }
+  .pv-dir[aria-pressed='true'] b { color: #111; }
+  .pv select {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    background: #2a2a28;
+    color: #f4f2ec;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 0.8125rem;
+  }
+  .pv-copy {
+    font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+    font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 8px 10px; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; width: 100%;
+  }
+  .pv-copy:hover { background: rgba(255, 255, 255, 0.08); }
+  .pv-note { font-size: 0.6875rem; color: #9b988f; line-height: 1.4; }
+  .pv :focus-visible { outline: 2px solid #ffe600; outline-offset: 2px; box-shadow: none; }
+  @media (max-width: 759px) {
+    .pv { right: auto; left: 50%; transform: translateX(-50%); width: calc(100vw - 32px); max-width: 420px; }
+    .pv-box:not([open]) { width: max-content; margin-inline: auto; }
+  }
+  @media (min-width: 760px) {
+    .pv-box:not([open]) { width: max-content; margin-left: auto; }
+  }
+</style>

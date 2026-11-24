@@ -1,0 +1,21 @@
+# The ten skills in the PM skill ledger. Chapters refer to them by id.
+- id: discovery
+  label: Discovery
+- id: framing
+  label: Problem framing
+- id: requirements
+  label: Requirements
+- id: prioritisation
+  label: Prioritisation
+- id: roadmapping
+  label: Roadmapping
+- id: metrics
+  label: Metrics
+- id: ai
+  label: AI product judgement
+- id: ux
+  label: UX
+- id: execution
+  label: Execution
+- id: gtm
+  label: Go-to-market

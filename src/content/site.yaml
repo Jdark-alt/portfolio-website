@@ -1,0 +1,95 @@
+# Site-wide settings and every small piece of interface text.
+# Edit freely. Anything in quotes is copy that appears on the site.
+
+name: Jerry Fernandes
+# Short role line used in the header, meta tags and structured data.
+role: Product manager
+jobTitle: Transitioning Product Manager
+location: Ahmedabad, India
+description: >-
+  Jerry Fernandes is a product manager in Ahmedabad, India, moving from six years of
+  B2B SaaS and ERP content marketing into product. He owns two products end to end,
+  including two shipped LLM features, and writes the PRDs and specs AI agents build from.
+
+contact:
+  email: 1.jerrfernandes@gmail.com
+  phone: "+91 97234 63461"
+  phoneHref: "+919723463461"
+  linkedin: https://www.linkedin.com/in/fernandes-jerry
+  linkedinLabel: linkedin.com/in/fernandes-jerry
+
+# Set to a path like /resume.pdf once the new résumé is in /public.
+# While this is empty, every résumé link is hidden.
+resume: ""
+
+# Which visual direction the site uses by default: a, b or c.
+direction: a
+
+# Preview mode shows the direction and headline switcher and asks search
+# engines not to index the site. Turn it off before launch.
+preview: true
+
+# Cloudflare Web Analytics token (cookie-free). Leave empty if Cloudflare
+# Pages injects analytics for you, or to switch analytics off.
+analyticsToken: ""
+
+nav:
+  - label: Mindkraft
+    href: /work/mindkraft/
+  - label: TPTD
+    href: /work/tptd/
+  - label: Case studies
+    href: /case-studies/
+  - label: Experience
+    href: /experience/
+  - label: About
+    href: /about/
+
+ui:
+  skipLink: Skip to content
+  mastheadLeft: Product management portfolio
+  menu: Menu
+  close: Close
+  resume: Résumé
+  resumeLong: Download the résumé
+  email: Email
+  phone: Phone
+  linkedin: LinkedIn
+  copy: Copy
+  copied: Copied
+  backHome: Back to the home page
+  source: Source
+  proofLabel: The work in four numbers
+  step: Step
+  documents: Documents
+  viewerSoon: Page-by-page viewer coming in the next step.
+  inProgress: In progress
+  draftTag: Draft copy
+  previewLabel: Preview
+  previewDirection: Direction
+  previewHeadline: Headline
+  previewHide: Hide preview controls
+  previewShow: Preview controls
+  previewStandfirst: Standfirst
+  previewCopyLink: Copy link to this version
+  previewNote: Preview only. Search engines are asked not to index this site.
+
+  footerBuilt: Specced by me, built with Claude Code.
+  footerRights: All screenshots are from real builds; Mindkraft screens use demo data.
+  notFoundTitle: This page doesn't exist
+  notFoundBody: The link may be old, or the page may not be written yet.
+
+# Meta and status lines used by direction A's document header.
+docMeta:
+  id: JF-001
+  label: Portfolio
+  status: Open to product roles
+
+# Names of the three visual directions, shown in the preview switcher.
+directions:
+  - id: a
+    name: Working Draft
+  - id: b
+    name: Long Read
+  - id: c
+    name: Night Blueprint

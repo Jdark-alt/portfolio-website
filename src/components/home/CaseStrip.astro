@@ -1,0 +1,87 @@
+---
+import { Picture } from 'astro:assets';
+import SectionHead from './SectionHead.astro';
+import { getCaseStudies, getHome, getSkillLabels } from '../../lib/content';
+import { getImage } from '../../lib/images';
+import { url } from '../../lib/url';
+
+const { caseStudies: copy } = await getHome();
+const studies = await getCaseStudies();
+const skills = await getSkillLabels();
+const cards = await Promise.all(studies.map(async (s) => ({ s, thumb: await getImage(`cs-${s.id}`) })));
+---
+<section id={copy.id} class="cs" aria-labelledby="cs-title">
+  <div class="wrap">
+    <SectionHead num="§3" id="cs-title" title={copy.title} intro={copy.intro} action={{ label: copy.cta, href: '/case-studies/' }} />
+    <ul class="rail" role="list" data-rail>
+      {cards.map(({ s, thumb }, i) => (
+        <li class="card" data-reveal>
+          <a href={url(`/case-studies/${s.id}/`)}>
+            <div class="thumb">
+              <Picture src={thumb.src} alt={thumb.alt} widths={[360, 560, 800]} sizes="(min-width: 1100px) 30vw, (min-width: 700px) 45vw, 78vw" formats={['avif']} fallbackFormat="webp" loading="lazy" />
+            </div>
+            <p class="meta label"><span class="i">{String(i + 1).padStart(2, '0')}</span><span>{s.data.kind}</span><span>{s.data.company}</span></p>
+            <h3>{s.data.title}</h3>
+            <ul class="tags" role="list">
+              {s.data.skills.map((k) => <li class="label">{skills[k]}</li>)}
+            </ul>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cs { padding-top: var(--section); }
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px var(--col-gap);
+    margin-top: clamp(32px, 4vw, 56px);
+  }
+  .card a { display: block; text-decoration: none; }
+  .thumb {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--bg-2);
+  }
+  .thumb :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform 900ms var(--ease-out); }
+  .card a:hover .thumb :global(img) { transform: scale(1.035); }
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; color: var(--fg-3); }
+  .meta .i { color: var(--accent-ink); }
+  h3 {
+    margin-top: 8px;
+    font-family: var(--font-display);
+    font-weight: var(--h2-weight);
+    font-stretch: var(--h2-stretch);
+    font-size: 1.375rem;
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+    transition: color var(--dur-1);
+  }
+  .card a:hover h3 { color: var(--accent-ink); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tags li { padding: 3px 8px; border: 1px solid var(--rule); color: var(--fg-2); text-transform: none; letter-spacing: 0.01em; }
+
+  :global(html[data-direction='b']) h3 { font-variation-settings: 'opsz' 30; font-size: 1.5rem; font-weight: 420; }
+  :global(html[data-direction='b']) .tags li { border-radius: 999px; }
+  :global(html[data-direction='c']) .thumb { border-color: var(--rule-strong); }
+
+  @media (max-width: 1099px) { .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) {
+    .rail {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r));
+      padding-inline: var(--gutter) var(--gutter-r);
+      scroll-padding-inline: var(--gutter);
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+    }
+    .card { flex: 0 0 80%; scroll-snap-align: start; }
+  }
+</style>

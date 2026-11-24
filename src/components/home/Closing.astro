@@ -1,0 +1,117 @@
+---
+import SectionHead from './SectionHead.astro';
+import { getHome, getSite } from '../../lib/content';
+import { url } from '../../lib/url';
+
+const site = await getSite();
+const { beforeProduct, contact } = await getHome();
+const rows = [
+  { label: contact.emailLabel, value: site.contact.email, href: `mailto:${site.contact.email}`, copy: site.contact.email },
+  { label: contact.phoneLabel, value: site.contact.phone, href: `tel:${site.contact.phoneHref}`, copy: site.contact.phone },
+  { label: contact.linkedinLabel, value: site.contact.linkedinLabel, href: site.contact.linkedin, external: true },
+  { label: contact.locationLabel, value: site.location },
+];
+---
+<section class="before" aria-labelledby="before-title">
+  <div class="wrap before-in">
+    <p class="num label" aria-hidden="true">§4</p>
+    <h2 id="before-title" class="before-title label">{beforeProduct.title}</h2>
+    <p class="before-text" data-reveal>{beforeProduct.text}</p>
+    <a class="before-link ulink" href={url(beforeProduct.href)} data-reveal>
+      {beforeProduct.cta}
+      <svg class="arw" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+    </a>
+  </div>
+</section>
+
+<section id={contact.id} class="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <SectionHead num="§5" id="contact-title" title={contact.title} intro={contact.text} />
+    <dl class="rows">
+      {rows.map((r) => (
+        <div class="row" data-reveal>
+          <dt class="label">{r.label}</dt>
+          <dd>
+            {r.href
+              ? <a class="big" href={r.href} {...(r.external ? { rel: 'me noopener', target: '_blank' } : {})}>{r.value}</a>
+              : <span class="big">{r.value}</span>}
+            {r.copy && <button type="button" class="copy label" data-copy={r.copy} data-done={site.ui.copied}>{site.ui.copy}</button>}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const original = btn.textContent;
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+        btn.textContent = btn.dataset.done ?? 'Copied';
+      } catch {
+        const range = document.createRange();
+        const target = btn.previousElementSibling;
+        if (target) { range.selectNodeContents(target); getSelection()?.removeAllRanges(); getSelection()?.addRange(range); }
+      }
+      setTimeout(() => (btn.textContent = original), 1600);
+    });
+  });
+</script>
+
+<style>
+  .before { padding-top: var(--section); }
+  .before-in {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 18px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .num { display: none; grid-column: 1 / -1; color: var(--accent-ink); }
+  .before-title { grid-column: 1 / span 3; color: var(--fg-3); padding-top: 6px; }
+  .before-text { grid-column: 4 / span 7; font-size: var(--step-2); line-height: 1.45; color: var(--fg-2); }
+  .before-link { grid-column: 4 / span 4; justify-self: start; display: inline-flex; gap: 8px; align-items: center; font-weight: 560; }
+  :global(html[data-direction='a']) .num { display: block; }
+  :global(html[data-direction='a']) .before-in { border-top: 0; }
+  :global(html[data-direction='b']) .before-text { font-style: italic; font-variation-settings: 'opsz' 24; }
+
+  .contact { padding-top: var(--section); }
+  .rows { margin-top: clamp(32px, 4vw, 56px); border-top: 1px solid var(--rule-strong); }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  dt { grid-column: 1 / span 3; color: var(--fg-3); }
+  dd { grid-column: 4 / span 9; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; min-width: 0; }
+  .big {
+    font-family: var(--font-display);
+    font-weight: var(--h2-weight);
+    font-stretch: var(--h2-stretch);
+    font-size: clamp(1.5rem, 1rem + 2.2vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  a.big { background-image: linear-gradient(var(--accent), var(--accent)); background-size: 0% 2px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 500ms var(--ease-out); }
+  a.big:hover { background-size: 100% 2px; }
+  .copy { padding: 5px 10px; border: 1px solid var(--rule); color: var(--fg-2); }
+  .copy:hover { border-color: var(--fg); color: var(--fg); }
+  :global(html[data-direction='b']) .big { font-variation-settings: 'opsz' 48; font-weight: 400; }
+  :global(html[data-direction='c']) .big { font-family: var(--font-label); font-weight: 400; font-stretch: 100%; letter-spacing: -0.03em; font-size: clamp(1.25rem, 0.9rem + 1.6vw, 2.125rem); }
+  :global(html[data-direction='c']) .rows { border-top-color: var(--rule); }
+
+  @media (max-width: 899px) {
+    .before-title, .before-text, .before-link { grid-column: 1 / -1; }
+    dt, dd { grid-column: 1 / -1; }
+    dd { margin-top: 6px; }
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+/** A simple holding page for sections that are being written. */
+import { getSite } from '../lib/content';
+import { url } from '../lib/url';
+
+interface Props { kicker: string; title: string; summary: string }
+const { kicker, title, summary } = Astro.props;
+const site = await getSite();
+---
+<section class="stub wrap">
+  <p class="label k">{kicker} · {site.ui.inProgress}</p>
+  <h1 data-split>{title}</h1>
+  <p class="sum" data-reveal>{summary}</p>
+  <slot />
+  <a class="ulink back" href={url('/')}>{site.ui.backHome}</a>
+</section>
+
+<style>
+  .stub { padding-block: clamp(48px, 6vw, 112px) 0; }
+  .k { color: var(--accent-ink); }
+  h1 {
+    margin-top: 20px;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-stretch: var(--display-stretch);
+    font-size: var(--step-5);
+    line-height: 0.98;
+    letter-spacing: var(--display-tracking);
+    max-width: 18ch;
+  }
+  .sum { margin-top: 24px; font-size: var(--step-2); line-height: 1.45; color: var(--fg-2); max-width: 38em; }
+  .back { display: inline-block; margin-top: 40px; font-weight: 560; }
+</style>

@@ -1,0 +1,52 @@
+---
+import { url } from '../../lib/url';
+
+interface Props {
+  num: string;
+  id: string;
+  title: string;
+  intro?: string;
+  action?: { label: string; href: string };
+}
+const { num, id, title, intro, action } = Astro.props;
+---
+<header class="sh">
+  <p class="num label" aria-hidden="true">{num}</p>
+  <h2 id={id} data-split>{title}</h2>
+  {intro && <p class="intro" data-reveal>{intro}</p>}
+  {action && (
+    <a class="action ulink" href={url(action.href)} data-reveal>
+      {action.label}
+      <svg class="arw" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+    </a>
+  )}
+</header>
+
+<style>
+  .sh {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 14px;
+    align-items: end;
+  }
+  .num { display: none; grid-column: 1 / -1; color: var(--accent-ink); }
+  h2 {
+    grid-column: 1 / span 7;
+    font-family: var(--font-display);
+    font-weight: var(--h2-weight);
+    font-stretch: var(--h2-stretch);
+    font-size: var(--step-4);
+    line-height: 1;
+    letter-spacing: -0.022em;
+  }
+  .intro { grid-column: 8 / span 5; color: var(--fg-2); font-size: 1rem; line-height: 1.55; max-width: 44ch; }
+  .action { grid-column: 8 / span 5; justify-self: start; display: inline-flex; gap: 8px; align-items: center; font-weight: 560; font-size: 0.9375rem; }
+  :global(html[data-direction='a']) .num { display: block; }
+  :global(html[data-direction='b']) h2 { font-variation-settings: 'opsz' 60; font-size: clamp(2.375rem, 1.5rem + 3.4vw, 4.25rem); }
+  :global(html[data-direction='b']) .intro { font-size: 1.125rem; font-style: italic; }
+  :global(html[data-direction='c']) .num { display: block; color: var(--fg-3); }
+  @media (max-width: 899px) {
+    h2, .intro, .action { grid-column: 1 / -1; }
+  }
+</style>

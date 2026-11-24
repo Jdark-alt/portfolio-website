@@ -1,0 +1,238 @@
+# Home page copy. Every word on the home page comes from this file
+# (plus the project and case-study files it points to).
+
+seo:
+  title: Jerry Fernandes · Product manager · B2B SaaS, ERP and AI
+  description: >-
+    Product manager portfolio. Two products built end to end with AI coding agents:
+    Mindkraft, a live habit app with two Claude Haiku features, and TPTD, a two-player
+    strategy game shipped across 25 builds in five weeks. PRDs, specs, roadmaps and metrics.
+
+hero:
+  eyebrow: Product manager · Ahmedabad, India
+  # Headline options. `default` is the one the site shows; the others can be
+  # previewed with the switcher (or ?h=2 in the URL) to collect opinions.
+  # `lead` is set quieter than `main` in every direction.
+  default: h1
+  headlines:
+    - id: h1
+      lead: Six years explaining B2B software.
+      main: Now I build it.
+      note: The original. A career turn in two beats.
+    - id: h2
+      lead: I used to explain products.
+      main: Now I decide what goes into them.
+      note: Same turn, but it names what a PM actually does.
+    - id: h3
+      lead: I don't write the code.
+      main: I own everything else.
+      note: Leads with the AI-built angle and is upfront about not coding.
+    - id: h4
+      lead: ""
+      main: I frame the problem, make the call, write the spec and ship it.
+      note: Process first; mirrors the How I work section below.
+    - id: h5
+      lead: Product management,
+      main: shown with the working.
+      note: Borrows the exam habit of showing your working. Sets up a site full of evidence.
+    - id: h6
+      lead: Six years making ERP make sense.
+      main: Now I make the product.
+      note: Leans on Odoo and ERP. Strongest for B2B and inventory roles.
+    - id: h7
+      lead: Two products.
+      main: Every decision on the record.
+      note: Short. Points at the evidence instead of the career change.
+    - id: h8
+      lead: Product manager.
+      main: Two live products, 15+ specs, 25 builds in five weeks.
+      note: Numbers first. The most CV-like.
+  standfirstDefault: s1
+  standfirsts:
+    - id: s1
+      text: >-
+        I own two products end to end. **Mindkraft** is a live habit-gamification app with
+        two shipped Claude Haiku features. **TPTD** is a two-player strategy game I took through
+        25 builds in five weeks. I frame the problem, make the calls and write the specs.
+        AI coding agents write the code.
+    - id: s2
+      text: >-
+        For six years I explained B2B and ERP software to the people buying it. Now I build
+        products: a live habit app with two AI features, and a strategy game shipped through
+        25 builds in five weeks. This site shows how, decision by decision, including what broke.
+    - id: s3
+      text: >-
+        Two products, built end to end with AI coding agents. I own the problem, the decisions,
+        the specs and the quality bar. Everything below links to the evidence.
+  cta:
+    label: See how I build products
+    href: "#how-i-work"
+  secondary:
+    label: Get in touch
+    href: "#contact"
+  # Direction A: the document header beside the hero.
+  docRows:
+    - label: Author
+      value: Jerry Fernandes
+    - label: Role
+      value: Product manager, moving from B2B SaaS content
+    - label: Currently
+      value: Content Marketer, Odoo India
+    - label: Shipping
+      value: Mindkraft · TPTD
+    - label: Status
+      value: Open to product roles
+      live: true
+  # Direction B: the contents list beside the hero.
+  contentsTitle: In this portfolio
+  contents:
+    - numeral: I.
+      title: Mindkraft
+      note: Two LLM features in a live habit app
+      href: /work/mindkraft/
+      meta: 10 ch.
+    - numeral: II.
+      title: TPTD
+      note: 25 builds in five weeks, each behind a gate
+      href: /work/tptd/
+      meta: 10 ch.
+    - numeral: III.
+      title: Case studies
+      note: PRD, UX reviews, research, growth and B2B AI strategy
+      href: /case-studies/
+      meta: "6"
+    - numeral: IV.
+      title: Before product
+      note: Six years translating ERP for buyers
+      href: /experience/
+      meta: ""
+  # Direction C: the figure beside the hero.
+  figure:
+    caption: "Fig. 1: How I work"
+    tag: Loop
+    footnote: One change, end to end
+    hint: Scroll to trace the loop
+
+# Four numbers under the hero. Every number needs a source.
+proof:
+  - value: "2"
+    label: Claude Haiku features in production, about ₹2 a query
+    source: Mindkraft evidence pack, AI features and cost
+    href: /work/mindkraft/
+    tag: Mindkraft
+  - value: "50"
+    suffix: " / 26"
+    label: sign-ups and weekly actives by June, with no paid marketing
+    source: Google Analytics, 11 June 2026
+    href: /work/mindkraft/
+    tag: Mindkraft
+  - value: "25"
+    label: builds in five weeks, each behind tests and a simulation gate
+    source: TPTD evidence pack, v9 to v34
+    href: /work/tptd/
+    tag: TPTD
+  - value: "15"
+    suffix: "+"
+    label: specs with non-goals, open decisions and acceptance tests
+    source: Mindkraft evidence pack, requirements and specs
+    href: /work/mindkraft/
+    tag: Mindkraft
+
+howIWork:
+  id: how-i-work
+  title: How I work
+  intro: >-
+    Six steps I repeat on every change. Each one links to the place it actually
+    happened, once in each product.
+  steps:
+    - name: Frame
+      principle: Turn a complaint into a problem worth solving, and say who has it.
+      evidence:
+        - project: Mindkraft
+          text: Made a 3-level setup optional so new users earn XP first
+          href: /work/mindkraft/#framing
+        - project: TPTD
+          text: Reframed "nerf wall charges" as a two-sided tug-of-war
+          href: /work/tptd/#framing
+    - name: Decide
+      principle: Write down the options, pick one, and record what it costs.
+      evidence:
+        - project: Mindkraft
+          text: Grit can be earned, never bought
+          href: /work/mindkraft/#decisions
+        - project: TPTD
+          text: Chose an exploit fix from simulation data
+          href: /work/tptd/#decisions
+    - name: Spec
+      principle: Non-goals, open decisions and tests in every handoff, because AI agents fill gaps with guesses.
+      evidence:
+        - project: Mindkraft
+          text: 15+ specs, with scenario tests A to H
+          href: /work/mindkraft/#building
+        - project: TPTD
+          text: 15 acceptance tests in the v34 spec
+          href: /work/tptd/#building
+    - name: Ship
+      principle: Ship behind a safety net of tags, test builds, previews and gates.
+      evidence:
+        - project: Mindkraft
+          text: Test repo, then branch previews, then the 3.0 release
+          href: /work/mindkraft/#building
+        - project: TPTD
+          text: 25 builds in five weeks, none live without my sign-off
+          href: /work/tptd/#building
+    - name: Measure
+      principle: Report the number, the gap, and what I didn't measure.
+      evidence:
+        - project: Mindkraft
+          text: 50 sign-ups, 26 weekly actives, only 2 analytics events
+          href: /work/mindkraft/#measuring
+        - project: TPTD
+          text: 258 bot matches per mode before v33 shipped
+          href: /work/tptd/#simulation-gate
+    - name: Iterate
+      principle: Each version answers a finding from the last one.
+      evidence:
+        - project: Mindkraft
+          text: The AI skill map rebuilt three times in 11 days
+          href: /work/mindkraft/#iteration
+        - project: TPTD
+          text: Sabotage reworked across 8 builds
+          href: /work/tptd/#iteration
+
+projects:
+  id: work
+  title: Two products, end to end
+  intro: >-
+    I don't write code. I own the problem, the decisions, the specs and the quality bar,
+    and AI coding agents build from my specs. Each project page walks through one product
+    from first idea to roadmap.
+
+caseStudies:
+  id: case-studies
+  title: Case studies
+  intro: >-
+    Assignments from Airtribe's AI-First Product Management program (Oct 2026 to Jan 2027),
+    reviewed by industry product managers.
+  cta: All case studies
+
+beforeProduct:
+  title: Before product
+  text: >-
+    Six years in B2B SaaS content, at OpenXcell and now Odoo India. I turned ERP features
+    into plain language for buyers, interviewed customers for success-story films, and
+    worked with product owners on competitive whitepapers. It taught me how people judge
+    software before they ever log in.
+  cta: Experience
+  href: /experience/
+
+contact:
+  id: contact
+  title: Contact
+  text: >-
+    I'm moving into product management and looking for PM roles, especially in B2B SaaS,
+    ERP and AI products.
+  emailLabel: Email
+  phoneLabel: Phone
+  linkedinLabel: LinkedIn
+  locationLabel: Based in

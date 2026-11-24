@@ -1,0 +1,32 @@
+# Copy for pages that are still being written. Each becomes a full page in a later step.
+- id: experience
+  kicker: Experience
+  title: Six years in B2B SaaS content, and what it gave a product team
+  summary: >-
+    Content Marketer at Odoo India (Dec 2023 to now) and Content Writer, then Content Marketing
+    Team Lead, at OpenXcell (Dec 2020 to Dec 2023). This page will cover the product work inside
+    that role, and the MA thesis on meaning in life that shaped how I think about motivation.
+  seoTitle: Experience · Jerry Fernandes
+  seoDescription: >-
+    Six years of B2B SaaS and ERP content marketing at Odoo India and OpenXcell, framed around
+    product understanding, customer insight and cross-team work, plus an MA in Philosophy.
+- id: about
+  kicker: About
+  title: About Jerry
+  summary: >-
+    Product manager in Ahmedabad, India, moving from content marketing into product.
+    MA in Philosophy (IGNOU, 2020) and a BSc in Physics.
+  seoTitle: About · Jerry Fernandes
+  seoDescription: >-
+    About Jerry Fernandes, a product manager in Ahmedabad, India: background, education and
+    contact details.
+- id: case-studies
+  kicker: Case studies
+  title: Case studies from Airtribe's AI-First PM program
+  summary: >-
+    Six assignments, each with the brief, my approach, the key decisions, the full document
+    and what I'd do differently. The page viewers are being built.
+  seoTitle: Case studies · Jerry Fernandes
+  seoDescription: >-
+    Product management case studies: a PRD, UX heuristic reviews, user research, a growth
+    strategy with RICE prioritisation, and a B2B AI customer-support platform strategy.

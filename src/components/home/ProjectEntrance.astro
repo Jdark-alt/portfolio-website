@@ -1,0 +1,167 @@
+---
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { getImage } from '../../lib/images';
+import { inline } from '../../lib/text';
+import { url } from '../../lib/url';
+import { getSite } from '../../lib/content';
+
+interface Props { project: CollectionEntry<'projects'>; index: number }
+const { project, index } = Astro.props;
+const p = project.data;
+const slug = project.id;
+const href = url(`/work/${slug}/`);
+const cover = await getImage(p.cover);
+const secondary = await getImage(p.secondary);
+const isPhone = cover.src.height > cover.src.width;
+const sourceLabel = (await getSite()).ui.source;
+const numeric = (v: string) => (/^\d+$/.test(v) ? v : undefined);
+---
+<article class={`pe ${isPhone ? 'is-phone' : 'is-wide'}`} data-project aria-labelledby={`pe-${slug}`}>
+  <div class="pe-head label">
+    <span class="pe-id">P-{String(index + 1).padStart(2, '0')}</span>
+    <span>{p.kicker}</span>
+    {p.url && <a class="pe-ext" href={p.url} rel="noopener" target="_blank">{p.urlLabel}<svg class="arw" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></a>}
+  </div>
+  <div class="pe-grid">
+    <div class="pe-text">
+      <h3 id={`pe-${slug}`} class="pe-title" data-split><a href={href}>{p.title}</a></h3>
+      {p.expansion && <p class="pe-exp label">{p.expansion}</p>}
+      <p class="pe-one" data-reveal>{p.oneLiner}</p>
+      <ul class="pe-proofs" role="list">
+        {p.proofs.map((m) => (
+          <li data-reveal>
+            <span class="v num" set:html={numeric(m.value) ? `<span data-count="${m.value}">${m.value}</span>` : inline(m.value)} />
+            <span class="l">{m.label}</span>
+            <span class="s label">{sourceLabel}: {m.source}</span>
+          </li>
+        ))}
+      </ul>
+      <a class="pe-cta" href={href} data-reveal>
+        <span>{p.cta}</span>
+        <svg class="arw" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+      </a>
+    </div>
+    <figure class="pe-media">
+      <a class="pe-media-link" href={href} tabindex="-1" aria-hidden="true">
+        {isPhone ? (
+          <div class="phones">
+            <div class="phone back" data-parallax="0.6">
+              <Picture src={secondary.src} alt="" widths={[300, 480, 640]} sizes="(min-width: 900px) 22vw, 42vw" formats={['avif']} fallbackFormat="webp" loading="lazy" />
+            </div>
+            <div class="phone front" data-parallax="-0.4" style={`view-transition-name: cover-${slug}`}>
+              <Picture src={cover.src} alt={cover.alt} widths={[300, 480, 640, 900]} sizes="(min-width: 900px) 24vw, 46vw" formats={['avif']} fallbackFormat="webp" loading="lazy" />
+            </div>
+          </div>
+        ) : (
+          <div class="plate" data-clip style={`view-transition-name: cover-${slug}`}>
+            <div class="plate-in" data-parallax="-0.5">
+              <Picture src={cover.src} alt={cover.alt} widths={[640, 960, 1400, 2000]} sizes="(min-width: 900px) 56vw, 100vw" formats={['avif']} fallbackFormat="webp" loading="lazy" />
+            </div>
+          </div>
+        )}
+      </a>
+      <figcaption class="label"><span>{cover.caption}</span><span class="credit">{cover.credit}</span></figcaption>
+    </figure>
+  </div>
+</article>
+
+<style>
+  .pe { border-top: 1px solid var(--rule-strong); padding-top: 14px; }
+  .pe + :global(.pe) { margin-top: clamp(72px, 8vw, 128px); }
+  .pe-head { display: flex; gap: 18px; flex-wrap: wrap; color: var(--fg-3); align-items: center; }
+  .pe-id { color: var(--accent-ink); }
+  .pe-ext { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; text-decoration: none; color: var(--fg); }
+  .pe-ext:hover { color: var(--accent-ink); }
+  .pe-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    margin-top: clamp(24px, 3vw, 40px);
+    align-items: start;
+  }
+  .pe-text { grid-column: 1 / span 5; min-width: 0; }
+  .pe-media { grid-column: 7 / span 6; min-width: 0; }
+  .pe-title {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-stretch: var(--display-stretch);
+    font-size: var(--step-5);
+    line-height: 0.95;
+    letter-spacing: var(--display-tracking);
+  }
+  .pe-title a { text-decoration: none; }
+  .pe-exp { margin-top: 10px; color: var(--fg-3); }
+  .pe-one { margin-top: 18px; font-size: var(--step-1); line-height: 1.5; color: var(--fg-2); max-width: 34em; }
+  .pe-proofs { margin-top: 28px; border-top: 1px solid var(--rule); }
+  .pe-proofs li {
+    display: grid;
+    grid-template-columns: minmax(84px, auto) 1fr;
+    column-gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .v {
+    grid-row: 1 / span 2;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-stretch: var(--display-stretch);
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .l { font-size: 0.9375rem; line-height: 1.4; }
+  .s { color: var(--fg-quiet); text-transform: none; letter-spacing: 0.01em; margin-top: 4px; }
+  .pe-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    font-weight: 620;
+    text-decoration: none;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .pe-cta .arw { transition: transform var(--dur-2) var(--ease-spring); }
+  .pe-cta:hover .arw { transform: translateX(5px); }
+
+  .pe-media figcaption { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 14px; color: var(--fg-3); text-transform: none; letter-spacing: 0.01em; }
+  .credit { color: var(--fg-quiet); }
+  .pe-media-link { display: block; }
+
+  .phones { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 6%; padding: 0 4% 8%; }
+  .phone {
+    border-radius: clamp(22px, 2.6vw, 38px);
+    overflow: hidden;
+    border: clamp(5px, 0.55vw, 8px) solid #121214;
+    background: #121214;
+    box-shadow: var(--shadow);
+    transition: transform 700ms var(--ease-out);
+  }
+  .phone :global(img) { width: 100%; height: auto; }
+  .phone.back { margin-top: 18%; }
+  .pe-media-link:hover .phone.front { transform: translateY(-6px); }
+
+  .plate { overflow: hidden; border: 1px solid var(--rule); box-shadow: var(--shadow); background: #0b0c0d; }
+  .plate-in { transform: scale(1.06); }
+  .plate :global(img) { width: 100%; height: auto; transition: transform 900ms var(--ease-out); }
+  .pe-media-link:hover .plate :global(img) { transform: scale(1.02); }
+
+  /* B: editorial plates */
+  :global(html[data-direction='b']) .pe-title { font-variation-settings: 'opsz' 72; font-weight: 400; }
+  :global(html[data-direction='b']) .v { font-variation-settings: 'opsz' 48; font-weight: 400; }
+  :global(html[data-direction='b']) .pe-one { font-size: 1.25rem; }
+  :global(html[data-direction='b']) .pe-cta { font-family: var(--font-label); border-bottom-width: 1px; }
+  /* C: instrument readouts */
+  :global(html[data-direction='c']) .v { font-family: var(--font-label); font-weight: 500; font-stretch: 100%; font-size: 1.5rem; letter-spacing: -0.03em; }
+  :global(html[data-direction='c']) .pe { border-top-color: var(--rule); }
+  :global(html[data-direction='c']) .plate { border-color: var(--rule-strong); }
+
+  @media (max-width: 899px) {
+    .pe-text, .pe-media { grid-column: 1 / -1; }
+    .pe-media { margin-top: 40px; }
+    .phones { padding-inline: 0; }
+  }
+</style>

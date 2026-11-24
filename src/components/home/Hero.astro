@@ -1,0 +1,230 @@
+---
+import LoopFigure from './LoopFigure.astro';
+import { getHome, getSite } from '../../lib/content';
+import { inline } from '../../lib/text';
+import { url } from '../../lib/url';
+
+const site = await getSite();
+const home = await getHome();
+const { hero, howIWork } = home;
+const headline = hero.headlines.find((h) => h.id === hero.default) ?? hero.headlines[0];
+const standfirst = hero.standfirsts.find((s) => s.id === hero.standfirstDefault) ?? hero.standfirsts[0];
+const options = {
+  h: Object.fromEntries(hero.headlines.map((h) => [h.id, { lead: h.lead, main: h.main }])),
+  s: Object.fromEntries(hero.standfirsts.map((s) => [s.id, inline(s.text)])),
+  dh: headline.id,
+  ds: standfirst.id,
+};
+const preview = site.preview;
+---
+<section class="hero" data-hero aria-labelledby="hero-title">
+  <div class="gridlines" aria-hidden="true" data-gridlines>
+    {Array.from({ length: 12 }, () => <span />)}
+  </div>
+  <div class="wrap hero-in">
+    <p class="eyebrow label" data-reveal>
+      <span class="sec" aria-hidden="true">§0</span>
+      <span class="live-dot" aria-hidden="true"></span>
+      <span>{hero.eyebrow}</span>
+    </p>
+    <h1 id="hero-title" class="hl" data-split>
+      <span class="hl-lead" data-hl-lead>{headline.lead}</span>{' '}
+      <span class="hl-main" data-hl-main>{headline.main}</span>
+    </h1>
+    {preview && (
+      <script is:inline define:vars={{ options }}>
+        (function () {
+          var q = new URLSearchParams(location.search), st;
+          try { st = window.localStorage; } catch (e) {}
+          function pick(key, store, list, fallback) {
+            var v = q.get(key) || (st && (function () { try { return st.getItem(store); } catch (e) { return null; } })());
+            return v && list[v] ? v : fallback;
+          }
+          var h = pick('h', 'jf-headline', options.h, options.dh);
+          var s = pick('s', 'jf-standfirst', options.s, options.ds);
+          var d = document.documentElement;
+          d.setAttribute('data-pv-headline', h);
+          d.setAttribute('data-pv-standfirst', s);
+          var lead = document.querySelector('[data-hl-lead]'), main = document.querySelector('[data-hl-main]');
+          if (lead) lead.textContent = options.h[h].lead;
+          if (main) main.textContent = options.h[h].main;
+          window.__jfStandfirst = options.s[s];
+        })();
+      </script>
+    )}
+    <div class="lead-col">
+      <p class="stand" data-standfirst data-reveal set:html={inline(standfirst.text)} />
+      {preview && (
+        <script is:inline>
+          (function () { var el = document.querySelector('p[data-standfirst]'); if (el && window.__jfStandfirst) el.innerHTML = window.__jfStandfirst; })();
+        </script>
+      )}
+      <div class="cta-row" data-reveal>
+        <a class="btn" href={url(hero.cta.href)} data-magnetic>
+          {hero.cta.label}
+          <svg class="arw" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+        </a>
+        {site.resume
+          ? <a class="ulink second" href={url(site.resume)}>{site.ui.resumeLong}</a>
+          : <a class="ulink second" href={url(hero.secondary.href)}>{hero.secondary.label}</a>}
+      </div>
+    </div>
+
+    <dl class="side side-a" data-reveal>
+      {hero.docRows.map((row) => (
+        <div class="row">
+          <dt class="label">{row.label}</dt>
+          <dd>{row.live && <span class="pulse" aria-hidden="true" />}{row.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <nav class="side side-b" aria-labelledby="contents-title" data-reveal>
+      <h2 id="contents-title" class="label">{hero.contentsTitle}</h2>
+      <ol role="list">
+        {hero.contents.map((c) => (
+          <li>
+            <a href={url(c.href)}>
+              <span class="numeral">{c.numeral}</span>
+              <span class="t">{c.title}<small>{c.note}</small></span>
+              <span class="meta label">{c.meta}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <div class="side side-c" data-reveal>
+      <LoopFigure steps={howIWork.steps} caption={hero.figure.caption} tag={hero.figure.tag} footnote={hero.figure.footnote} hint={hero.figure.hint} />
+    </div>
+  </div>
+  <span class="crop tl" aria-hidden="true"></span><span class="crop tr" aria-hidden="true"></span>
+</section>
+
+<style>
+  .hero { position: relative; padding-block: clamp(40px, 5vw, 80px) clamp(48px, 5vw, 72px); overflow: clip; }
+  .hero-in {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    align-items: start;
+  }
+  .hero-in > * { min-width: 0; }
+  .eyebrow { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; color: var(--fg-3); margin-bottom: clamp(20px, 2.4vw, 32px); }
+  .sec, .live-dot { display: none; }
+  .hl {
+    grid-column: 1 / span 10;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-stretch: var(--display-stretch);
+    font-style: var(--display-style);
+    font-size: var(--step-hero);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-tracking);
+  }
+  .hl-lead { color: var(--fg-quiet); }
+  .hl-main { color: var(--fg); }
+  .lead-col { grid-column: 1 / span 6; margin-top: clamp(28px, 3.4vw, 56px); }
+  .stand { font-size: var(--step-2); line-height: 1.45; color: var(--fg-2); max-width: 36em; }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 32px; }
+  .second { font-weight: 560; font-size: 0.9375rem; }
+  .side { display: none; }
+  .crop { display: none; }
+  .gridlines { display: none; }
+
+  /* ---------- A · Working Draft ---------- */
+  :global(html[data-direction='a']) .sec { display: inline; color: var(--accent-ink); }
+  :global(html[data-direction='a']) .hl {
+    grid-column: 1 / span 10;
+    font-size: clamp(3.25rem, 0.9rem + 7.4vw, 7.75rem);
+    text-wrap: wrap;
+  }
+  :global(html[data-direction='a']) .hl-lead,
+  :global(html[data-direction='a']) .hl-main { display: block; text-wrap: balance; }
+  :global(html[data-direction='a']) .side-a {
+    display: block;
+    grid-column: 8 / span 5;
+    grid-row: 3;
+    margin-top: clamp(28px, 3.4vw, 56px);
+    border-top: 1px solid var(--rule-strong);
+  }
+  .side-a .row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; border-bottom: 1px solid var(--rule); padding: 11px 0; align-items: baseline; }
+  .side-a dt { color: var(--fg-3); }
+  .side-a dd { font-size: 0.9375rem; font-weight: 520; display: flex; align-items: center; gap: 10px; }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--mark); animation: pulse 2.4s var(--ease-out) infinite; flex: none; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px var(--mark); } 50% { box-shadow: 0 0 0 7px transparent; } }
+  :global(html[data-direction='a']) .gridlines {
+    display: grid;
+    position: absolute;
+    inset: 0 var(--gutter-r) 0 var(--gutter);
+    max-width: calc(var(--max) - 80px);
+    margin-inline: auto;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(#000 55%, transparent 92%);
+    mask-image: linear-gradient(#000 55%, transparent 92%);
+  }
+  .gridlines span { border-inline: 1px solid color-mix(in srgb, var(--fg) 6%, transparent); transform-origin: top; }
+
+  /* ---------- B · Long Read ---------- */
+  :global(html[data-direction='b']) .eyebrow { color: var(--accent); }
+  :global(html[data-direction='b']) .hl { font-variation-settings: 'opsz' 72; grid-column: 1 / span 10; }
+  :global(html[data-direction='b']) .hl-main { font-style: italic; font-weight: 360; color: var(--accent); }
+  :global(html[data-direction='b']) .stand { font-variation-settings: 'opsz' 18; color: #2b2822; }
+  :global(html[data-direction='b']) .second { font-family: var(--font-label); background-image: linear-gradient(var(--accent), var(--accent)); }
+  :global(html[data-direction='b']) .side-b {
+    display: block;
+    grid-column: 9 / span 4;
+    grid-row: 3;
+    align-self: end;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .side-b h2 { padding: 12px 0 14px; color: var(--fg-3); }
+  .side-b a {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 8px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    align-items: baseline;
+    transition: background-color var(--dur-2);
+  }
+  .side-b a:hover .t { color: var(--accent); }
+  .numeral { font-style: italic; color: var(--accent); font-size: 1.125rem; }
+  .side-b .t { font-size: 1.1875rem; line-height: 1.25; font-variation-settings: 'opsz' 24; transition: color var(--dur-1); }
+  .side-b small { display: block; font-family: var(--font-label); font-size: 0.8125rem; color: var(--fg-3); margin-top: 4px; line-height: 1.35; }
+  .side-b .meta { color: var(--fg-quiet); text-transform: none; letter-spacing: 0; }
+
+  /* ---------- C · Night Blueprint ---------- */
+  :global(html[data-direction='c']) .hero {
+    background-image: radial-gradient(color-mix(in srgb, var(--fg) 9%, transparent) 1px, transparent 1.2px);
+    background-size: 24px 24px;
+    background-position: -1px -1px;
+  }
+  :global(html[data-direction='c']) .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  :global(html[data-direction='c']) .eyebrow { grid-column: 1 / span 7; }
+  :global(html[data-direction='c']) .hl { grid-column: 1 / span 7; font-size: clamp(3rem, 1rem + 6.6vw, 7.5rem); }
+  :global(html[data-direction='c']) .lead-col { grid-column: 1 / span 7; }
+  :global(html[data-direction='c']) .side-c { display: block; grid-column: 8 / span 5; grid-row: 1 / span 3; align-self: start; }
+  :global(html[data-direction='c']) .crop { display: block; position: absolute; top: 24px; width: 14px; height: 14px; border: 0 solid var(--fg-quiet); }
+  :global(html[data-direction='c']) .crop.tl { left: calc(var(--gutter) - 20px); border-width: 1px 0 0 1px; }
+  :global(html[data-direction='c']) .crop.tr { right: calc(var(--gutter-r) - 20px); border-width: 1px 1px 0 0; }
+
+  /* ---------- Narrow screens ---------- */
+  @media (max-width: 899px) {
+    .hl, .lead-col,
+    :global(html[data-direction]) .hl,
+    :global(html[data-direction]) .lead-col,
+    :global(html[data-direction]) .eyebrow { grid-column: 1 / -1; }
+    :global(html[data-direction='a']) .side-a,
+    :global(html[data-direction='b']) .side-b,
+    :global(html[data-direction='c']) .side-c { grid-column: 1 / -1; grid-row: auto; margin-top: 40px; }
+    :global(html[data-direction='c']) .hl { font-size: clamp(2.875rem, 0.8rem + 9vw, 5rem); }
+    :global(html[data-direction='a']) .gridlines { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 16px; }
+    :global(html[data-direction='a']) .gridlines span:nth-child(n + 5) { display: none; }
+    .crop { display: none !important; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+/**
+ * Direction C's "How I work" loop: six nodes on a stadium-shaped path.
+ * The motion script draws the path and lights nodes; without JS it is a complete static diagram.
+ */
+interface Props {
+  steps: { name: string }[];
+  caption: string;
+  tag: string;
+  footnote: string;
+  hint?: string;
+  variant?: 'hero' | 'sticky';
+}
+const { steps, caption, tag, footnote, hint, variant = 'hero' } = Astro.props;
+const nodes = [
+  { x: 40, y: 150, lx: 56, ly: 154, anchor: 'start' },
+  { x: 130, y: 60, lx: 130, ly: 42, anchor: 'middle' },
+  { x: 270, y: 60, lx: 270, ly: 42, anchor: 'middle' },
+  { x: 360, y: 150, lx: 344, ly: 154, anchor: 'end' },
+  { x: 270, y: 240, lx: 270, ly: 266, anchor: 'middle' },
+  { x: 130, y: 240, lx: 130, ly: 266, anchor: 'middle' },
+];
+const path = 'M40 150 A90 90 0 0 1 130 60 H270 A90 90 0 0 1 360 150 A90 90 0 0 1 270 240 H130 A90 90 0 0 1 40 150 Z';
+---
+<figure class={`loop loop-${variant}`} data-loop={variant}>
+  <figcaption class="loop-cap label"><span>{caption}</span><span>{tag}</span></figcaption>
+  <svg viewBox="0 0 400 290" role="img" aria-label={`${caption}: ${steps.map((s, i) => `${i + 1} ${s.name}`).join(', ')}, then back to the start.`}>
+    <path class="loop-base" d={path} />
+    <path class="loop-live" d={path} pathLength="1" data-loop-live />
+    <g class="loop-dim">
+      <path d="M60 282 H340 M60 277 V287 M340 277 V287" />
+    </g>
+    <text class="loop-center" x="200" y="146" text-anchor="middle">{footnote.toUpperCase()}</text>
+    <text class="loop-count" x="200" y="166" text-anchor="middle" data-loop-count>{steps.length} / {steps.length}</text>
+    {nodes.slice(0, steps.length).map((n, i) => (
+      <g class="loop-node" data-loop-node={i} data-on="true">
+        <circle cx={n.x} cy={n.y} r="7" />
+        <text x={n.lx} y={n.ly} text-anchor={n.anchor}>{String(i + 1).padStart(2, '0')} {steps[i].name.toUpperCase()}</text>
+      </g>
+    ))}
+  </svg>
+  {hint && <p class="loop-foot label"><span>{hint}</span><span data-loop-lit>{steps.length} / {steps.length}</span></p>}
+</figure>
+
+<style>
+  .loop {
+    border: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    padding: 16px 16px 12px;
+  }
+  .loop-cap, .loop-foot { display: flex; justify-content: space-between; gap: 12px; color: var(--fg-3); }
+  .loop-foot { border-top: 1px solid var(--rule); margin-top: 8px; padding-top: 10px; color: var(--fg-quiet); }
+  svg { width: 100%; height: auto; overflow: visible; margin-top: 6px; }
+  .loop-base { fill: none; stroke: var(--fg-quiet); stroke-width: 1; stroke-dasharray: 3 4; opacity: 0.7; }
+  .loop-live { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .loop-dim path { fill: none; stroke: var(--rule-strong); stroke-width: 1; }
+  .loop-center { font-family: var(--font-label); font-size: 8.5px; letter-spacing: 0.08em; fill: var(--fg-quiet); }
+  .loop-count { font-family: var(--font-label); font-size: 13px; fill: var(--fg); font-variant-numeric: tabular-nums; }
+  .loop-node circle { fill: var(--bg); stroke: var(--fg-3); stroke-width: 1.5; transition: fill 400ms var(--ease-out), stroke 400ms; }
+  .loop-node text { font-family: var(--font-label); font-size: 10.5px; letter-spacing: 0.04em; fill: var(--fg-3); transition: fill 400ms; }
+  .loop-node[data-on] circle { fill: var(--accent); stroke: var(--accent); }
+  .loop-node[data-on] text { fill: var(--fg); }
+  .loop-sticky { padding: 20px 20px 16px; }
+</style>

@@ -1,0 +1,79 @@
+# Every image on the site. `npm run images` turns these into optimised copies in
+# src/assets/img/ (the originals in /source are never touched).
+#
+#   id        how pages refer to the image
+#   source    path to the original, from the repo root
+#   crop      optional [left, top, width, height] in original pixels
+#   width     optional max width of the derived copy (default 2400)
+#   alt       what a screen reader says (required)
+#   caption   optional visible caption
+#   credit    where the image comes from (build, commit, data)
+
+- id: mk-map-web
+  source: source/Mindkraft/App screenshots/screenshots/02-map-web.png
+  width: 1179
+  alt: >-
+    Mindkraft's Map after "Weave my web": goal threads in pink, blue and orange run out of
+    activities the user already tracks, toward dashed nodes still to be revealed.
+  caption: The Map, woven by Claude Haiku from the user's own habits.
+  credit: Real build df2ed8d, 5 Oct 2026, demo data.
+
+- id: mk-composer-draft
+  source: source/Mindkraft/App screenshots/screenshots/05-quest-composer-draft.png
+  width: 1179
+  alt: >-
+    Mindkraft's Quest Composer draft open in the quest builder: Morning run, Strength training
+    and Stretch and mobility linked as existing activities, and one new practice badged
+    "becomes an activity".
+  caption: A Quest Composer draft, editable before anything is saved.
+  credit: Real build df2ed8d, 5 Oct 2026, demo data.
+
+- id: mk-my-activities
+  source: source/Mindkraft/App screenshots/screenshots/01-my-activities.png
+  width: 1179
+  alt: >-
+    Mindkraft's My Activities list with completion rings; three activities are done today,
+    each with an Undo button.
+  caption: The core loop. Complete an activity, earn XP, keep the streak.
+  credit: Real build df2ed8d, 5 Oct 2026, demo data.
+
+- id: tptd-wave
+  source: source/TPTD/Screenshots/01-wave-screen.png
+  crop: [100, 205, 3000, 1875]
+  width: 2400
+  alt: >-
+    TPTD's attacker Wave step: the maze on the left with zones Z1 to Z3, and on the right a
+    forecast reading 49.7% of the army gets through, release timelines for each unit group,
+    and the editor for Swarm A.
+  caption: The attacker's Wave step, after five prototype rounds.
+  credit: Real build v34, commit e6e1ca6, seed 22.
+
+- id: tptd-start
+  source: source/TPTD/Screenshots/10-start-screen.png
+  crop: [100, 205, 3000, 1840]
+  width: 2400
+  alt: >-
+    TPTD's start screen: the TPTD wordmark, Two Player Tower Defence, settings for waves,
+    clock and mode, and three cards for single player, this device and multiplayer.
+  caption: Start screen with the Simple and Advanced mode setting.
+  credit: Real build v34, commit e6e1ca6.
+
+# Case-study thumbnails, rendered from one page of each PDF by `npm run images`.
+- id: cs-b2b-ai-support
+  pdf: b2b-ai-support
+  alt: Title slide of the B2B AI customer-support platform strategy deck.
+- id: cs-vitafit-prd
+  pdf: vitafit-prd
+  alt: Title slide of the VitaFit key decisions deck, with retention figures.
+- id: cs-zepto-aov
+  pdf: zepto-aov
+  alt: RICE ranking slide from the Zepto deck, with checkout reminders scored 96.
+- id: cs-uber-pickup
+  pdf: uber-pickup
+  alt: Title slide of the Uber pickup research, listing the three interview questions.
+- id: cs-matrimony-ux
+  pdf: matrimony-ux
+  alt: Title slide of the Matrimony.com heuristic review, listing the heuristics and laws used.
+- id: cs-nykaa-ux
+  pdf: nykaa-ux
+  alt: Title slide of the Nykaa user experience analysis, with app screenshots.

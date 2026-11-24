@@ -1,0 +1,162 @@
+@import './fonts.css';
+@import './tokens.css';
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { min-height: 100dvh; }
+img, svg, video, picture { display: block; max-width: 100%; }
+img { height: auto; }
+input, button, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+p, h1, h2, h3, h4 { overflow-wrap: break-word; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+a { color: inherit; }
+[hidden] { display: none !important; }
+
+/* ---------- Base ---------- */
+html {
+  background: var(--bg);
+  color: var(--fg);
+  scroll-padding-top: 96px;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-text);
+  font-stretch: var(--text-stretch);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--accent); color: var(--on-accent); }
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+strong { font-weight: 620; color: var(--fg); }
+:root[data-direction='b'] strong { font-weight: 560; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+:root[data-direction='a'] :focus-visible { outline-color: var(--fg); box-shadow: 0 0 0 5px var(--accent); }
+
+/* ---------- Utilities ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter-r);
+}
+.grid12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+}
+@media (max-width: 759px) {
+  .grid12 { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 16px; }
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-transform);
+  font-stretch: var(--label-stretch);
+  font-weight: 450;
+  line-height: 1.4;
+}
+.num { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Inline arrow drawn as SVG (the fonts have no arrow glyph). */
+.arw { display: inline-block; width: 0.9em; height: 0.9em; vertical-align: -0.08em; flex: none; }
+
+/* Links that underline from left to right on hover. */
+.ulink {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 2px;
+  transition: background-size var(--dur-2) var(--ease-out), color var(--dur-1);
+}
+.ulink:hover { background-size: 0% 1px; background-position: 100% 100%; }
+
+/* Buttons */
+.btn {
+  --mx: 0px; --my: 0px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 14px 22px;
+  font-family: var(--font-text);
+  font-stretch: 100%;
+  font-weight: 620;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-decoration: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translate(var(--mx), var(--my));
+  transition: transform 500ms var(--ease-out), background-color var(--dur-2);
+}
+.btn .arw { transition: transform var(--dur-2) var(--ease-spring); }
+.btn:hover .arw { transform: translateX(4px); }
+:root[data-direction='b'] .btn { background: var(--fg); color: var(--bg); font-family: var(--font-label); font-weight: 560; }
+:root[data-direction='b'] .btn .arw { color: #9daaf5; }
+:root[data-direction='c'] .btn { font-weight: 650; }
+
+/* Draft marker for copy that still needs Jerry. Only shown in preview builds. */
+.todo {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: #ffe600;
+  color: #111;
+}
+
+/* ---------- Motion gating ----------
+   With JS, elements start hidden and the motion script reveals them. Without JS,
+   with reduced motion, or if the script fails to start within 3 s, everything is
+   simply visible. */
+html.js:not(.rm) [data-reveal],
+html.js:not(.rm) [data-split] { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth scrolling (Lenis) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---------- Cross-page transitions ---------- */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}

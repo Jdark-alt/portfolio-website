@@ -1,0 +1,61 @@
+---
+import { getSite } from '../lib/content';
+import { url } from '../lib/url';
+
+const site = await getSite();
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap grid12 foot">
+    <div class="who">
+      <p class="name">{site.name}</p>
+      <p class="role">{site.jobTitle} · {site.location}</p>
+    </div>
+    <ul class="links" role="list">
+      <li><a class="ulink" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>
+      <li><a class="ulink" href={`tel:${site.contact.phoneHref}`}>{site.contact.phone}</a></li>
+      <li><a class="ulink" href={site.contact.linkedin} rel="me noopener" target="_blank">{site.ui.linkedin}</a></li>
+      {site.resume && <li><a class="ulink" href={url(site.resume)}>{site.ui.resumeLong}</a></li>}
+    </ul>
+    <ul class="nav label" role="list">
+      {site.nav.map((item) => <li><a class="ulink" href={url(item.href)}>{item.label}</a></li>)}
+    </ul>
+    <div class="small label">
+      <p>{site.ui.footerBuilt}</p>
+      <p>{site.ui.footerRights}</p>
+      <p>© {year} {site.name}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule-strong);
+    padding-block: 48px calc(48px + env(safe-area-inset-bottom, 0px));
+    margin-top: var(--section);
+  }
+  .foot { row-gap: 32px; }
+  .who { grid-column: 1 / span 4; }
+  .name {
+    font-family: var(--font-display);
+    font-weight: var(--h2-weight);
+    font-stretch: var(--h2-stretch);
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .role { color: var(--fg-3); margin-top: 8px; font-size: 0.9375rem; }
+  .links { grid-column: 5 / span 4; display: grid; gap: 6px; align-content: start; }
+  .nav { grid-column: 9 / span 2; display: grid; gap: 8px; align-content: start; }
+  .small { grid-column: 11 / span 2; color: var(--fg-3); display: grid; gap: 8px; align-content: start; text-transform: none; letter-spacing: 0; }
+  .links a, .nav a { text-decoration: none; }
+  @media (max-width: 1099px) {
+    .who { grid-column: 1 / -1; }
+    .links { grid-column: 1 / span 6; }
+    .nav { grid-column: 7 / span 3; }
+    .small { grid-column: 10 / span 3; }
+  }
+  @media (max-width: 759px) {
+    .who, .links, .nav, .small { grid-column: 1 / -1; }
+  }
+</style>

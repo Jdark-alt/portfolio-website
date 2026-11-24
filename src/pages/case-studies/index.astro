@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import Stub from '../../components/Stub.astro';
+import { getCaseStudies, getPage, getSkillLabels } from '../../lib/content';
+import { url } from '../../lib/url';
+
+const page = await getPage('case-studies');
+const studies = await getCaseStudies();
+const skills = await getSkillLabels();
+---
+<Base title={page.seoTitle} description={page.seoDescription} page="cases">
+  <Stub kicker={page.kicker} title={page.title} summary={page.summary}>
+    <ol class="list" role="list">
+      {studies.map((s, i) => (
+        <li>
+          <a href={url(`/case-studies/${s.id}/`)}>
+            <span class="label i">{String(i + 1).padStart(2, '0')} · {s.data.kind} · {s.data.company}</span>
+            <span class="t">{s.data.title}</span>
+            <span class="d">{s.data.summary}</span>
+            <span class="label k">{s.data.skills.map((k) => skills[k]).join(' · ')}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </Stub>
+</Base>
+
+<style>
+  .list { margin-top: 48px; border-top: 1px solid var(--rule-strong); }
+  .list a { display: grid; gap: 6px; padding: 22px 0; border-bottom: 1px solid var(--rule); text-decoration: none; }
+  .i { color: var(--accent-ink); }
+  .t { font-family: var(--font-display); font-weight: var(--h2-weight); font-stretch: var(--h2-stretch); font-size: var(--step-3); line-height: 1.1; letter-spacing: -0.015em; }
+  .list a:hover .t { color: var(--accent-ink); }
+  .d { color: var(--fg-2); max-width: 60ch; }
+  .k { color: var(--fg-3); }
+</style>

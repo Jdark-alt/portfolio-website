@@ -1,0 +1,18 @@
+/* Self-hosted variable fonts (OFL). Browsers only download a face when a
+   page actually uses it, so declaring all three directions' fonts is free. */
+@import '@fontsource-variable/archivo/standard.css';
+@import '@fontsource-variable/martian-mono/standard.css';
+@import '@fontsource-variable/newsreader/standard.css';
+@import '@fontsource-variable/newsreader/standard-italic.css';
+@import '@fontsource-variable/schibsted-grotesk/wght.css';
+@import '@fontsource-variable/instrument-sans/standard.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+/* Instrument Sans and the mono faces have no ₹ glyph; this face supplies only that one. */
+@font-face {
+  font-family: 'JF Rupee';
+  src: url('../assets/fonts/rupee-fallback.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+20B9;
+}

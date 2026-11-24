@@ -1,0 +1,137 @@
+---
+import LoopFigure from './LoopFigure.astro';
+import SectionHead from './SectionHead.astro';
+import { getHome, getSite } from '../../lib/content';
+import { url } from '../../lib/url';
+
+const { howIWork, hero } = await getHome();
+const { ui } = await getSite();
+---
+<section id={howIWork.id} class="how" data-how aria-labelledby="how-title">
+  <div class="wrap">
+    <SectionHead num="§1" id="how-title" title={howIWork.title} intro={howIWork.intro} />
+    <div class="how-body">
+      <div class="how-fig">
+        <div class="fig-stick">
+          <LoopFigure steps={howIWork.steps} caption={hero.figure.caption} tag={hero.figure.tag} footnote={hero.figure.footnote} variant="sticky" />
+        </div>
+      </div>
+      <div class="how-track" aria-hidden="true"><span data-how-progress></span></div>
+      <ol class="steps" role="list">
+        {howIWork.steps.map((step, i) => (
+          <li class="step" data-step={i} data-reveal>
+            <p class="n label" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3><span class="sr-only">{ui.step} {i + 1}: </span>{step.name}</h3>
+            <p class="principle">{step.principle}</p>
+            <ul class="ev" role="list">
+              {step.evidence.map((e) => (
+                <li>
+                  <a href={url(e.href)}>
+                    <span class="proj label">{e.project}</span>
+                    <span class="t">{e.text}</span>
+                    <svg class="arw go" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how { padding-top: var(--section); }
+  .how-body { position: relative; margin-top: clamp(32px, 4vw, 56px); }
+  .how-fig, .how-track { display: none; }
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule-strong); }
+  .step { position: relative; padding: 20px 22px 30px 0; min-width: 0; transition: background-color 500ms var(--ease-out); }
+  .n { color: var(--accent-ink); }
+  h3 {
+    font-family: var(--font-display);
+    font-weight: var(--h2-weight);
+    font-stretch: var(--h2-stretch);
+    font-size: var(--step-3);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    margin: 12px 0 10px;
+  }
+  .principle { font-size: 0.9688rem; line-height: 1.5; color: var(--fg-2); max-width: 34ch; }
+  .ev { margin-top: 18px; display: grid; gap: 2px; }
+  .ev a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .ev .proj { grid-column: 1; color: var(--fg-3); }
+  .ev .t { grid-column: 1; color: var(--fg); }
+  .ev .go { grid-column: 2; grid-row: 1 / span 2; align-self: center; width: 14px; height: 14px; color: var(--fg-3); transition: transform var(--dur-2) var(--ease-spring), color var(--dur-1); }
+  .ev a:hover .go { transform: translate(3px, -3px); color: var(--accent-ink); }
+  .ev a:hover .t { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+
+  /* ---------- A · six-column traceability strip with a scroll-linked progress rule ---------- */
+  @media (min-width: 1100px) {
+    :global(html[data-direction='a']) .steps { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  }
+  :global(html[data-direction='a']) .step + .step { padding-left: 20px; border-left: 1px solid var(--rule); }
+  :global(html[data-direction='a']) .step.is-on { background: var(--bg-2); }
+  :global(html[data-direction='a']) .step::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: -1px;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms var(--ease-out);
+  }
+  :global(html[data-direction='a']) .step.is-on::before { transform: scaleX(1); }
+  :global(html[data-direction='a']) .how-track { display: block; position: absolute; left: 0; right: 0; top: -1px; height: 1px; }
+
+  /* ---------- B · numbered essay paragraphs ---------- */
+  :global(html[data-direction='b']) .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 56px; border-top-color: var(--rule); }
+  :global(html[data-direction='b']) .step { display: grid; grid-template-columns: 64px 1fr; column-gap: 8px; padding: 28px 0 32px; border-bottom: 1px solid var(--rule); }
+  :global(html[data-direction='b']) .step > * { grid-column: 2; }
+  :global(html[data-direction='b']) .n {
+    grid-column: 1; grid-row: 1 / span 4;
+    font-family: var(--font-display); font-style: italic; font-size: 3.5rem; line-height: 0.9;
+    letter-spacing: 0; text-transform: none; color: var(--accent);
+    font-variation-settings: 'opsz' 72; font-weight: 300;
+  }
+  :global(html[data-direction='b']) h3 { margin-top: 0; font-variation-settings: 'opsz' 48; }
+  :global(html[data-direction='b']) .principle { font-size: 1.125rem; max-width: 40ch; font-style: italic; color: var(--fg-2); }
+  :global(html[data-direction='b']) .ev a { font-family: var(--font-label); font-size: 0.8438rem; }
+
+  /* ---------- C · sticky loop figure beside the steps ---------- */
+  @media (min-width: 900px) {
+    :global(html[data-direction='c']) .how-body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); }
+    :global(html[data-direction='c']) .how-fig { display: block; grid-column: 1 / span 5; }
+    :global(html[data-direction='c']) .fig-stick { position: sticky; top: 110px; }
+    :global(html[data-direction='c']) .steps { grid-column: 7 / span 6; grid-template-columns: 1fr; border-top-color: var(--rule); }
+  }
+  :global(html[data-direction='c']) .step { padding: 28px 0 34px; border-bottom: 1px solid var(--rule); transition: opacity 500ms var(--ease-out); }
+  :global(html[data-direction='c']) .step:not(.is-on) { opacity: 0.55; }
+  :global(html.rm[data-direction='c']) .step, :global(html:not(.js)[data-direction='c']) .step { opacity: 1; }
+  :global(html[data-direction='c']) .n { color: var(--accent); }
+
+  @media (max-width: 1099px) and (min-width: 700px) {
+    :global(html[data-direction='a']) .step:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+    :global(html[data-direction='a']) .step:nth-child(n + 4) { border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 899px) {
+    :global(html[data-direction='c']) .steps { grid-template-columns: 1fr; }
+    :global(html[data-direction='c']) .step:not(.is-on) { opacity: 1; }
+  }
+  @media (max-width: 699px) {
+    .steps, :global(html[data-direction]) .steps { grid-template-columns: 1fr; }
+    :global(html[data-direction='a']) .step { padding: 18px 0 24px; border-left: 0 !important; padding-left: 0 !important; border-bottom: 1px solid var(--rule); }
+    :global(html[data-direction='b']) .step { grid-template-columns: 48px 1fr; }
+    :global(html[data-direction='b']) .n { font-size: 2.75rem; }
+  }
+</style>

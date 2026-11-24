@@ -1,0 +1,32 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Stub from '../../components/Stub.astro';
+import { getCaseStudies, getSite, getSkillLabels } from '../../lib/content';
+import { getImage } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const studies = await getCaseStudies();
+  return studies.map((study) => ({ params: { slug: study.id }, props: { study } }));
+}
+const { study } = Astro.props;
+const s = study.data;
+const site = await getSite();
+const skills = await getSkillLabels();
+const thumb = await getImage(`cs-${study.id}`);
+---
+<Base title={`${s.company}: ${s.kind} · ${site.name}`} description={s.summary} page="case">
+  <Stub kicker={`${s.kind} · ${s.company}`} title={s.title} summary={s.summary}>
+    <p class="label skills">{s.skills.map((k) => skills[k]).join(' · ')}</p>
+    <figure class="thumb"><Picture src={thumb.src} alt={thumb.alt} widths={[640, 1000, 1400]} sizes="(min-width: 900px) 60vw, 100vw" formats={['avif']} fallbackFormat="webp" /></figure>
+    <p class="label docs">{site.ui.documents}: {s.pdfs.map((d) => d.label).join(' · ')}</p>
+    <p class="soon">{site.ui.viewerSoon}</p>
+  </Stub>
+</Base>
+
+<style>
+  .skills { margin-top: 20px; color: var(--fg-3); }
+  .thumb { margin-top: 40px; max-width: 880px; border: 1px solid var(--rule); box-shadow: var(--shadow); }
+  .docs { margin-top: 20px; color: var(--fg-2); }
+  .soon { margin-top: 8px; color: var(--fg-3); }
+</style>

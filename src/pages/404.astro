@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSite } from '../lib/content';
+import { url } from '../lib/url';
+
+const site = await getSite();
+---
+<Base title={`${site.ui.notFoundTitle} · ${site.name}`} description={site.ui.notFoundBody} page="nf">
+  <section class="wrap nf">
+    <p class="label">404</p>
+    <h1>{site.ui.notFoundTitle}</h1>
+    <p>{site.ui.notFoundBody}</p>
+    <a class="ulink" href={url('/')}>{site.ui.backHome}</a>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-block: 96px 0; display: grid; gap: 20px; justify-items: start; }
+  .label { color: var(--accent-ink); }
+  h1 { font-family: var(--font-display); font-weight: var(--display-weight); font-stretch: var(--display-stretch); font-size: var(--step-5); line-height: 1; letter-spacing: var(--display-tracking); }
+</style>

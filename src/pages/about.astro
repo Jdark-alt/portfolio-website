@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import Stub from '../components/Stub.astro';
+import { getPage } from '../lib/content';
+
+const page = await getPage('about');
+---
+<Base title={page.seoTitle} description={page.seoDescription} page="about">
+  <Stub kicker={page.kicker} title={page.title} summary={page.summary} />
+</Base>
